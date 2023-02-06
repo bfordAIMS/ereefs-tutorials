@@ -3,16 +3,23 @@ project:
   output-dir: docs
 
 website:
-  title: "Test"
-  navbar:
-    left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+  favicon: logo.png
+  title: "AIMS eReefs tutorials"
+  navbar: 
+    background: "#4a85b4"
+    logo: logo.png
+    right:
+      - href: r_tutorials_home.qmd
+        text: "{{< fa brands r-project >}}"
+      - href: python_tutorials_home.qmd
+        text: "{{< fa brands python >}} Python"
+    collapse-below: sm
 
 format:
   html:
-    theme: cosmo
+    theme: 
+      light: flatly
+      dark: darkly
     css: styles.css
     toc: true
 

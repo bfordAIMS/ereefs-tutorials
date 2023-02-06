@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Test",
+    "title": "AIMS eReefs tutorials",
     "section": "",
-    "text": "To learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Choose a language\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBrowse by topic"
   },
   {
     "objectID": "about.html",
@@ -12,5 +12,54 @@
     "title": "About",
     "section": "",
     "text": "About this site"
+  },
+  {
+    "objectID": "python_tutorials_home.html",
+    "href": "python_tutorials_home.html",
+    "title": "AIMS eReefs tutorials",
+    "section": "",
+    "text": "This is the sub-homepage for the Python tutorials."
+  },
+  {
+    "objectID": "r_tutorials_home.html",
+    "href": "r_tutorials_home.html",
+    "title": "AIMS eReefs tutorials",
+    "section": "",
+    "text": "This is the sub-home page for the R tutorials.\n“”"
+  },
+  {
+    "objectID": "index.html#choose-a-programming-language",
+    "href": "index.html#choose-a-programming-language",
+    "title": "AIMS eReefs tutorials",
+    "section": "Choose a programming language",
+    "text": "Choose a programming language"
+  },
+  {
+    "objectID": "index.html#choose-a-language",
+    "href": "index.html#choose-a-language",
+    "title": "AIMS eReefs tutorials",
+    "section": "Choose a language",
+    "text": "Choose a language"
+  },
+  {
+    "objectID": "index.html#browse-by-topic",
+    "href": "index.html#browse-by-topic",
+    "title": "AIMS eReefs tutorials",
+    "section": "Browse by topic",
+    "text": "Browse by topic\n\n\n\nPlotting\n\n\n\nAnalysis\n\n\n\nAnother topic"
+  },
+  {
+    "objectID": "index.html#view-list-of-all-available-tutorials",
+    "href": "index.html#view-list-of-all-available-tutorials",
+    "title": "AIMS eReefs tutorials",
+    "section": "View list of all available tutorials",
+    "text": "View list of all available tutorials\n\n\n\nTutorial\nLanguages\n\n\n\n\nPlotting time series data"
+  },
+  {
+    "objectID": "index.html#all-available-tutorials",
+    "href": "index.html#all-available-tutorials",
+    "title": "AIMS eReefs tutorials",
+    "section": "All available tutorials",
+    "text": "All available tutorials\n\n\n\nTutorial\nLanguages\n\n\n\n\nPlotting time series data"
   }
 ]

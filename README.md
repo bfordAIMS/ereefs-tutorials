@@ -7,7 +7,31 @@ Currently the site holds a single tutorial for plotting eReefs time series data 
 
 # Developer overview
 
+This is a static [Quarto website](https://quarto.org/docs/websites) hosted by Github Pages. 
+
+Webpages can be edited and added via the Github repository. To do this we must clone the repository, make changes to the relevant Quarto (`.qmd`) documents, or add new Quarto documents to add new webpages, render to amended website on a local machine (using Quarto), and then push the changes to the repository.
+
+> *Note:* This process can be changed by using Github Actions to render the Quarto website, though at present local rendering is sufficient. 
+
 ## File structure
 
-The website source files are contained in `~/site` and the rendered site files in `~/site/rendered
+The website source files are contained in the root directory and subfolders, excluding the following subfolders:
+
+* `docs` contains the rendered website files - do not edit these file directly, they are updated automatically by Quarto upon rendering the website source files
+
+* `_extensions` contains Quarto extensions which extend Quarto's functionality (e.g. we use the fontawesome extension to include icons in virtually any of the website's text)
+
+* `.quarto` contains files used by Quarto behind the scenes - do not edit these files; knowledge of these files is not needed
+
+### Website source files
+
+* Individual webpages correspond to individual `.qmd` files; notably this includes:
+
+  - `index.qmd` the homepage
+  - `about.qmd` the 'about' page (general website info; may be included/excluded via the `.yml` file)
+  - `<file_name>.qmd` other webpages (note that these pages must be linked to, either directly or derivatively, from the home page or else will not be reachable)
+
+* `_quarto.yml` is used to set global YAML settings (including theming and navigation)
+
+* `style.css` is a global CSS style sheet applied to all webpages (sourced in the `.yml` file)
 

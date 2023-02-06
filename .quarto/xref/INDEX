@@ -1,8 +1,14 @@
 {
   "index.qmd": {
-    "index.html": "4eb31af9"
+    "index.html": "c1f0769e"
   },
   "about.qmd": {
-    "about.html": "0ff5ce16"
+    "about.html": "57aaaabc"
+  },
+  "python_tutorials_home.qmd": {
+    "python_tutorials_home.html": "405f8cbf"
+  },
+  "r_tutorials_home.qmd": {
+    "r_tutorials_home.html": "074a6c48"
   }
 }

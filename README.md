@@ -9,5 +9,5 @@ Currently the site holds a single tutorial for plotting eReefs time series data 
 
 ## File structure
 
-The website source files are contained in `~/site` and the rendered site files in `~/site/rendered-site`
+The website source files are contained in `~/site` and the rendered site files in `~/site/rendered
 

@@ -3,11 +3,11 @@ project:
   output-dir: docs
 
 website:
-  favicon: logo.png
+  favicon: images/logo.png
   title: "AIMS eReefs tutorials"
   navbar: 
     background: "#4a85b4"
-    logo: logo.png
+    logo: images/logo.png
     right:
       - href: r_tutorials_home.qmd
         text: "{{< fa brands r-project >}}"
@@ -20,6 +20,7 @@ format:
     theme: 
       light: flatly
       dark: darkly
+    highlight-style: atom-one
     css: styles.css
     toc: true
 

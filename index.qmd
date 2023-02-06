@@ -4,46 +4,9 @@ format:
     toc: false
 ---
 
-## Choose a language
-
-<br>
-
-:::: {.columns} 
-
-::: {.column width="50%"}
-[![](images/r_logo.png){height=80}](r_tutorials_home.html)
-:::
-
-::: {.column width="50%"}
-[![](images/python_logo.png){height=100}](python_tutorials_home.html)
-:::
-
-::::
-
-## Browse by topic
-
-:::: {.columns} 
-
-::: {.column width="33%"}
-### Plotting
-:::
-
-::: {.column width="33%"}
-### Analysis
-:::
-
-::: {.column width="33%"}
-### Another topic
-:::
-
-::::
-
-
-## All available tutorials
-
 | Tutorial | Languages |
 |-|-|
-| Plotting time series data | {{< fa brands r-project >}}|
+| Plotting time series data | [{{< fa brands r-project >}}](time_series_plot_r.html)|
 
 
 

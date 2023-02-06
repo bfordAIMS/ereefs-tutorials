@@ -1,14 +1,23 @@
 {
-  "index.qmd": {
-    "index.html": "c1f0769e"
-  },
   "about.qmd": {
-    "about.html": "57aaaabc"
+    "about.html": "26168edb"
+  },
+  "index.qmd": {
+    "index.html": "211244a3"
   },
   "python_tutorials_home.qmd": {
-    "python_tutorials_home.html": "405f8cbf"
+    "python_tutorials_home.html": "6a4891a5"
   },
   "r_tutorials_home.qmd": {
-    "r_tutorials_home.html": "074a6c48"
+    "r_tutorials_home.html": "8c1c7665"
+  },
+  "time-series-plot-r/tutorial_time_series_plot_r.qmd": {
+    "tutorial_time_series_plot_r.html": "4810be63"
+  },
+  "time_series_plot_r.qmd": {
+    "time_series_plot_r.html": "0376dd5e"
+  },
+  "index_example_sections.qmd": {
+    "index_example_sections.html": "4f2af972"
   }
 }

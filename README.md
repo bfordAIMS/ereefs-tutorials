@@ -1,3 +1,5 @@
+# NOTE: *work in progress*
+
 ## User overview
 
 This repository holds the source files for the AIMS Knowledge Systems eReefs tutorials hosted as [](bfordAIMS.github.io/ereefs-tutorials). 
@@ -28,10 +30,11 @@ The website source files are contained in the root directory and subfolders, exc
 * Individual webpages correspond to individual `.qmd` files; notably this includes:
 
   - `index.qmd` the homepage
-  - `about.qmd` the 'about' page (general website info; may be included/excluded via the `.yml` file)
   - `<file_name>.qmd` other webpages (note that these pages must be linked to, either directly or derivatively, from the home page or else will not be reachable)
 
 * `_quarto.yml` is used to set global YAML settings (including theming and navigation)
 
 * `style.css` is a global CSS style sheet applied to all webpages (sourced in the `.yml` file)
+
+* Individual tutorials are contained within 
 

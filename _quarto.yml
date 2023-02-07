@@ -9,9 +9,9 @@ website:
     background: "#4a85b4"
     logo: images/logo.png
     right:
-      - href: r_tutorials_home.qmd
+      - href: tutorials/r/r_tutorials_homepage.qmd
         text: "{{< fa brands r-project >}}"
-      - href: python_tutorials_home.qmd
+      - href: tutorials/python/python_tutorials_homepage.qmd
         text: "{{< fa brands python >}} Python"
     collapse-below: sm
 

@@ -25,5 +25,26 @@
   },
   "time-series-plot-r/time_series_plot_r.qmd": {
     "time_series_plot_r.html": "741554c6"
+  },
+  "basic-map-plot-python/basic_map_plot_python.qmd": {
+    "basic_map_plot_python.html": "bda31f44"
+  },
+  "tutorials/python/basic-map-plot-python/basic_map_plot_python.qmd": {
+    "basic_map_plot_python.html": "cc9779de"
+  },
+  "tutorials/python/python_tutorials_homepage.qmd": {
+    "python_tutorials_homepage.html": "3136ce4c"
+  },
+  "tutorials/r/r_tutorials_homepage.qmd": {
+    "r_tutorials_homepage.html": "946f6c1e"
+  },
+  "tutorials/r/time-series-plot-r/time_series_plot_r.qmd": {
+    "time_series_plot_r.html": "e247be25"
+  },
+  "tutorials/python/basic-time-series-plot-python/basic_time_series_plot_python.qmd": {
+    "basic_time_series_plot_python.html": "60dfe80a"
+  },
+  "tutorials/python/processing-data-python/processing_data_python.qmd": {
+    "processing_data_python.html": "7a0c2f5d"
   }
 }

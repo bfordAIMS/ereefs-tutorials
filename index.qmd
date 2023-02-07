@@ -6,10 +6,11 @@ format:
 
 | Tutorial | Languages |
 |-|-|
-| Plotting time series data | [{{< fa brands r-project >}}](time-series-plot-r/time_series_plot_r.html)|
-
+| Plotting time series data | [{{< fa brands r-project >}} R](tutorials/r/time-series-plot-r/time_series_plot_r.html) &emsp; [{{< fa brands python >}} Python](tutorials/python/basic-time-series-plot-python/basic_time_series_plot_python.qmd)|
+| Plotting eReefs data on a map | [{{< fa brands python >}} Python](tutorials/python/basic-map-plot-python/basic_map_plot_python.html) |
+| Or could have icons like this | ![](images/python_logo_notext.png){.icon} |
 
 
 ::: {.column-screen}
-![](images/home_csiro.jpg)
+![](images/home_csiro.jpg){}
 :::

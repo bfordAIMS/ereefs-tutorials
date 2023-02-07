@@ -19,5 +19,11 @@
   },
   "index_example_sections.qmd": {
     "index_example_sections.html": "4f2af972"
+  },
+  "time-series-plot-r-files/time_series_plot_r.qmd": {
+    "time_series_plot_r.html": "6a14eaca"
+  },
+  "time-series-plot-r/time_series_plot_r.qmd": {
+    "time_series_plot_r.html": "741554c6"
   }
 }

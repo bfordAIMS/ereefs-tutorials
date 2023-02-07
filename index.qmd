@@ -6,7 +6,7 @@ format:
 
 | Tutorial | Languages |
 |-|-|
-| Plotting time series data | [{{< fa brands r-project >}}](time_series_plot_r.html)|
+| Plotting time series data | [{{< fa brands r-project >}}](time-series-plot-r/time_series_plot_r.html)|
 
 
 

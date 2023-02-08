@@ -104,6 +104,8 @@ All website files are contained in the git repository `ereefs-tutorials`. This i
 
 * :page_facing_up: `style.css` is a global CSS style sheet applied to all webpages (sourced from the YAML file).
 
+* :page_facing_up: `theme_changes_<light/dark>.scss` alter the light and dark website themes (e.g. the link color was changed from the default green to blue)
+
 * :page_facing_up: `README.md` the documentation file for the website (displayed on the repository home page on Github).
 
 ## Potential problems/errors/issues

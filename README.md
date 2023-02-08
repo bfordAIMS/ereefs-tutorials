@@ -2,15 +2,6 @@
 title: "eReefs Tutorials (WORK IN PROGRESS)"
 ---
 
-<style>
-li {list-style-type: none;}
-h1 {font-size: 2em;}
-h2 {font-size: 1.75em;}
-h3 {font-size: 1.5em;}
-h4 {font-size: 1.25em;}
-h5 {font-size: 1em;}
-body {text-align: justify}
-</style>
 
 ---
 
@@ -38,19 +29,19 @@ To successfully render the website you will need the following:
 
 #### Required:
 
-* $\bullet$ [Quarto](https://quarto.org/docs/get-started)
-* $\bullet$ [R](https://www.r-project.org/)
-* $\bullet$ [Python](https://wiki.python.org/moin/BeginnersGuide/Download)
-* $\bullet$ A [Github account](https://github.com/join) with permissions to push to the ereefs-tutorials repository
-* $\bullet$ The R packages and Python modules used within the scripts you are trying to render
+* [Quarto](https://quarto.org/docs/get-started)
+* [R](https://www.r-project.org/)
+* [Python](https://wiki.python.org/moin/BeginnersGuide/Download)
+* A [Github account](https://github.com/join) with permissions to push to the ereefs-tutorials repository
+* The R packages and Python modules used within the scripts you are trying to render
 
-  * $\rightarrow$ R packages are installed from an R console with the command <br>`install.packages("<package_name>")` for packages hosted on CRAN; or <br>`remotes::install_github("<Github username>/<repo name>")` to install packages hosted in a Github repository.
-  * $\rightarrow$ Python modules are installed from a python console with the command <br> `pip install <module name>`
+  * R packages are installed from an R console with the command <br>`install.packages("<package_name>")` for packages hosted on CRAN; or <br>`remotes::install_github("<Github username>/<repo name>")` to install packages hosted in a Github repository.
+  * Python modules are installed from a python console with the command <br> `pip install <module name>`
 
 #### Recommended:
 
-* $\bullet$ [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-* $\bullet$ An IDE such as [R Studio](https://posit.co/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download) (with the R, Python, and Quarto extensions)
+* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* An IDE such as [R Studio](https://posit.co/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download) (with the R, Python, and Quarto extensions)
 
 
 ### Rendering process
@@ -96,9 +87,9 @@ All website files are contained in the git repository `ereefs-tutorials`. This i
 
 * :file_folder: `tutorials` contains the tutorial source files
 
-  * $\hookrightarrow$ :file_folder: `r` and `python` sort the source files by language.
+  * :file_folder: `r` and `python` sort the source files by language.
 
-    * $\hookrightarrow$ :file_folder: `<tutorial-name>` contain the files associated with a specific tutorial, including the main tutorial file :page_facing_up: `<tutorial_name>.qmd` as well as other associated data, images, etc.
+    * :file_folder: `<tutorial-name>` contain the files associated with a specific tutorial, including the main tutorial file :page_facing_up: `<tutorial_name>.qmd` as well as other associated data, images, etc.
 
 * :file_folder: `images` contains images for general use (e.g. the eReefs logo)
 
@@ -120,7 +111,7 @@ All website files are contained in the git repository `ereefs-tutorials`. This i
 
 ## Potential problems/errors/issues
 
->`ImportError: DLL load failed: The specified module could not be found.` when rendering a python tutorial. Try the solutions [here](https://stackoverflow.com/questions/20201868/importerror-dll-load-failed-the-specified-module-could-not-be-found) (downloading [Microsoft Visual C++](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) worked for me).
+`ImportError: DLL load failed: The specified module could not be found.` when rendering a python tutorial. Try the solutions [here](https://stackoverflow.com/questions/20201868/importerror-dll-load-failed-the-specified-module-could-not-be-found) (downloading [Microsoft Visual C++](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) worked for me).
 
 ---
 
@@ -128,21 +119,22 @@ All website files are contained in the git repository `ereefs-tutorials`. This i
 
 ##### *When contributing to this project please ensure you do the following:*
 
-* **1.** Tutorials should be self-contained in :file_folder:`tutorials/<tutorial language>/<tutorial-name>` with a single :page_facing_up:`<tutorial_name>.qmd` file and all other files required to run the tutorial (e.g. images, data). This allows people to download the individual folders to run specific tutorials on their own machine.
+1. Tutorials should be self-contained in :file_folder:`tutorials/<tutorial language>/<tutorial-name>` with a single :page_facing_up:`<tutorial_name>.qmd` file and all other files required to run the tutorial (e.g. images, data). This allows people to download the individual folders to run specific tutorials on their own machine.
 
 
-* **2.** Any file which does not pertain to a specific tutorial should be placed in either:
-  * :file_folder:`~` style or theme files (e.g. YAML, CSS, SCSS) belong in the home folder
-  * :file_folder:`~/images` for images
-  * :file_folder:`~/resources` not yet created; would house any file which is not an image or style/theme file and which does not pertain to a specific tutorial
+2. Any file which does not pertain to a specific tutorial should be placed in either:
+  
+    * :file_folder:`~` style or theme files (e.g. YAML, CSS, SCSS) belong in the home folder
+    * :file_folder:`~/images` for images
+    * :file_folder:`~/resources` not yet created; would house any file which is not an image or style/theme file and which does not pertain to a specific tutorial
 
-* **3.** Pay attention to the folder structure and file naming conventions used already. It would be nice to keep these consistent. 
+3. Pay attention to the folder structure and file naming conventions used already. It would be nice to keep these consistent. 
 
-* **4.** Push changes to the repository only after the *entire* website has rendered successfully (rather than just the specific tutorial) and you have tested it in a browser window (including a check that links work as desired). This will ensure the website will not break the next time it is rendered as a whole. 
+4. Push changes to the repository only after the *entire* website has rendered successfully (rather than just the specific tutorial) and you have tested it in a browser window (including a check that links work as desired). This will ensure the website will not break the next time it is rendered as a whole. 
 
-* **5.** If multiple are working on the website concurrently, take care to avoid merge conflicts. For example, only update a single tutorial at a time and push it to git before moving to another tutorial.
+5. If multiple are working on the website concurrently, take care to avoid merge conflicts. For example, only update a single tutorial at a time and push it to git before moving to another tutorial.
 
-* **6.** Update this `README.md` documentation file as you go, including the resolution of any errors/issues you have encountered. 
+6. Update this `README.md` documentation file as you go, including the resolution of any errors/issues you have encountered. 
 
 
 ---

@@ -23,7 +23,7 @@ website:
 format:
   html:
     theme: 
-      light: flatly
+      light: [flatly, theme_changes_light.scss]
       dark: [darkly, theme_changes_dark.scss]
     highlight-style: atom-one
     css: styles.css

@@ -8,21 +8,30 @@ website:
   navbar: 
     background: "#4a85b4"
     logo: images/logo.png
-    right:
+    left: 
       - href: tutorials/r/r_tutorials_homepage.qmd
         text: "{{< fa brands r-project >}}"
       - href: tutorials/python/python_tutorials_homepage.qmd
         text: "{{< fa brands python >}} Python"
+
+    right:
+      - text: "   "
+      - href: "https://github.com/bfordAIMS/ereefs-tutorials"
+        icon: "github"
     collapse-below: sm
 
 format:
   html:
     theme: 
       light: flatly
-      dark: darkly
+      dark: [darkly, theme_changes_dark.scss]
     highlight-style: atom-one
     css: styles.css
     toc: true
+
+execute:
+  freeze: auto
+  code-fold: true
 
 
 

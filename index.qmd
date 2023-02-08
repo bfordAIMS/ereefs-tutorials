@@ -12,6 +12,5 @@ format:
 | Or could have icons like this | ![](images/python_logo_notext.png){.icon} |
 
 
-::: {.column-screen}
-![](images/home_csiro.jpg){}
+:::{.bottomImage}
 :::

@@ -2,40 +2,55 @@
 title: "eReefs Tutorials (WORK IN PROGRESS)"
 ---
 
-# User overview
+<style>
+li {list-style-type: none;}
+h1 {font-size: 2em;}
+h2 {font-size: 1.75em;}
+h3 {font-size: 1.5em;}
+h4 {font-size: 1.25em;}
+h5 {font-size: 1em;}
+body {text-align: justify}
+</style>
 
-This repository holds the source files for the AIMS Knowledge Systems eReefs tutorials. 
+---
 
-Currently the site holds a single tutorial for plotting eReefs time series data in `R`. However, in time we hope to include a range of tutorials in both `R` and `python`. If you wish to see a tutorial on a specific topic you can add a request using the Github Issues feature, though please note that the development of subsequent tutorials is dependent on the time availability of AIMS staff.
+# User Overview
 
+This repository holds the source files for the AIMS Knowledge Systems eReefs tutorials hosted at https://bfordaims.github.io/ereefs-tutorials/. 
 
-# Developer overview
+Currently, a few basic tutorials are available for the languages `R` and `python`. In time we hope to add a wider range of tutorials, including for more advanced concepts. If you wish to see a tutorial on a specific topic you can add a request using the Github Issues feature, though please note that the development of subsequent tutorials is dependent on the time availability of the small number of contributing AIMS staff.
+
+---
+
+# Developer Overview
 
 This is a static [Quarto website](https://quarto.org/docs/websites) hosted by Github Pages. 
 
 Webpages can be edited and added via the Github repository. To do this we must clone the repository, make changes to the relevant Quarto (`.qmd`) documents, or add new Quarto documents to add new webpages, render the amended website on a local machine (using Quarto), and then push the changes to the repository.
 
-> *Note:* This process can be changed by using Github Actions to render the Quarto website, though at present local rendering is sufficient. 
+> This process can be changed by using Github Actions to render the Quarto website, though at present local rendering is sufficient. 
 
 ## Rendering the website
 
 ### Local machine requirements
 
-To successfully render the website you will need the following software installed.
+To successfully render the website you will need the following:
 
-*Required*:
+#### Required:
 
-* [Quarto](https://quarto.org/docs/get-started)
-* [R](https://www.r-project.org/)
-* [Python](https://wiki.python.org/moin/BeginnersGuide/Download)
-* The R packages and Python modules used within the scripts you are trying to render.
+* $\bullet$ [Quarto](https://quarto.org/docs/get-started)
+* $\bullet$ [R](https://www.r-project.org/)
+* $\bullet$ [Python](https://wiki.python.org/moin/BeginnersGuide/Download)
+* $\bullet$ A [Github account](https://github.com/join) with permissions to push to the ereefs-tutorials repository
+* $\bullet$ The R packages and Python modules used within the scripts you are trying to render
 
-*Recommended*:
+  * $\rightarrow$ R packages are installed from an R console with the command <br>`install.packages("<package_name>")` for packages hosted on CRAN; or <br>`remotes::install_github("<Github username>/<repo name>")` to install packages hosted in a Github repository.
+  * $\rightarrow$ Python modules are installed from a python console with the command <br> `pip install <module name>`
 
-* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-* An IDE such as [R Studio](https://posit.co/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download) (with the R, Python, and Quarto extensions)
+#### Recommended:
 
-> If you get the error `ImportError: DLL load failed: The specified module could not be found.` when rendering a python tutorial try the solutions [here](https://stackoverflow.com/questions/20201868/importerror-dll-load-failed-the-specified-module-could-not-be-found). Downloading [Microsoft Visual C++](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) worked for me.
+* $\bullet$ [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* $\bullet$ An IDE such as [R Studio](https://posit.co/downloads/) or [Visual Studio Code](https://code.visualstudio.com/download) (with the R, Python, and Quarto extensions)
 
 
 ### Rendering process
@@ -56,7 +71,7 @@ git clone <repo url>
 
 #### 3. Render:
 
-##### Entire website
+##### 3.1. Entire website
 Edits to the YAML or CSS files require you to render the entire website to implement the changes. You can do this with from the command line with
 
 ```
@@ -65,7 +80,7 @@ quarto preview <path to "ereefs-tutorials" folder> --render all --no-browser --n
 
 or by using the respective IDE controls (`ctrl+shft+p > Quarto: Render Project` in VS Code).
 
-##### Single page
+##### 3.2. Single page
 Edits to a single `.qmd` file can be rendered from the command line with 
 
 ```
@@ -77,31 +92,57 @@ or by using the respective IDE controls (`ctrl+shft+p > Quarto: Render` in VS Co
 
 ## File structure
 
-The website is contained in the home folder `ereefs-tutorials`. Within this folder we have the following folders and files
+All website files are contained in the git repository `ereefs-tutorials`. This includes:
 
-:file_folder: `tutorials` contains the tutorial source files
+* :file_folder: `tutorials` contains the tutorial source files
 
-$\hspace{0.5cm}\hookrightarrow$ `r` and `python` sort the source files by language
+  * $\hookrightarrow$ :file_folder: `r` and `python` sort the source files by language.
 
-$\hspace{1cm}\hookrightarrow$ `<tutorial-name>` folders contain the files associated with a specific tutorial
+    * $\hookrightarrow$ :file_folder: `<tutorial-name>` contain the files associated with a specific tutorial, including the main tutorial file :page_facing_up: `<tutorial_name>.qmd` as well as other associated data, images, etc.
+
+* :file_folder: `images` contains images for general use (e.g. the eReefs logo)
+
+* :file_folder: `docs` contains the rendered website files - do not edit these file directly, they are updated automatically by Quarto upon rendering the website source files.
+
+* :file_folder: `_extensions` contains Quarto extensions which extend Quarto's functionality (e.g. we use the fontawesome extension to include icons in virtually any of the website's text); do not edit.
+
+* :file_folder: `_freeze` corresponds to the freeze execution option. This controls which code chunks are rendered. With freeze set to auto, the code output is reproduced only when the source code changes. This folder holds the cache-like items needed for this option.  
+
+* :file_folder: `.quarto` contains files used by Quarto behind the scenes - knowledge of these files is not needed; do not edit.
+
+* :page_facing_up: `index.qmd` the website homepage source file. All other webpages must be linked to, either directly or derivatively, from the home page (or else will not be reachable).
+
+* :page_facing_up: `_quarto.yml` is used to set global YAML settings (including theming and navigation).
+
+* :page_facing_up: `style.css` is a global CSS style sheet applied to all webpages (sourced from the YAML file).
+
+* :page_facing_up: `README.md` the documentation file for the website (displayed on the repository home page on Github).
+
+## Potential problems/errors/issues
+
+>`ImportError: DLL load failed: The specified module could not be found.` when rendering a python tutorial. Try the solutions [here](https://stackoverflow.com/questions/20201868/importerror-dll-load-failed-the-specified-module-could-not-be-found) (downloading [Microsoft Visual C++](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) worked for me).
+
+---
+
+# Contributing to this project
+
+##### *When contributing to this project please ensure you do the following:*
+
+* **1.** Tutorials should be self-contained in :file_folder:`tutorials/<tutorial language>/<tutorial-name>` with a single :page_facing_up:`<tutorial_name>.qmd` file and all other files required to run the tutorial (e.g. images, data). This allows people to download the individual folders to run specific tutorials on their own machine.
 
 
-* `docs` contains the rendered website files - do not edit these file directly, they are updated automatically by Quarto upon rendering the website source files
+* **2.** Any file which does not pertain to a specific tutorial should be placed in either:
+  * :file_folder:`~` style or theme files (e.g. YAML, CSS, SCSS) belong in the home folder
+  * :file_folder:`~/images` for images
+  * :file_folder:`~/resources` not yet created; would house any file which is not an image or style/theme file and which does not pertain to a specific tutorial
 
-* `_extensions` contains Quarto extensions which extend Quarto's functionality (e.g. we use the fontawesome extension to include icons in virtually any of the website's text)
+* **3.** Pay attention to the folder structure and file naming conventions used already. It would be nice to keep these consistent. 
 
-* `.quarto` contains files used by Quarto behind the scenes - do not edit these files; knowledge of these files is not needed
+* **4.** Push changes to the repository only after the *entire* website has rendered successfully (rather than just the specific tutorial) and you have tested it in a browser window (including a check that links work as desired). This will ensure the website will not break the next time it is rendered as a whole. 
 
-### Website source files
+* **5.** If multiple are working on the website concurrently, take care to avoid merge conflicts. For example, only update a single tutorial at a time and push it to git before moving to another tutorial.
 
-* Individual webpages correspond to individual `.qmd` files; notably this includes:
+* **6.** Update this `README.md` documentation file as you go, including the resolution of any errors/issues you have encountered. 
 
-  - `index.qmd` the homepage
-  - `<file_name>.qmd` other webpages (note that these pages must be linked to, either directly or derivatively, from the home page or else will not be reachable)
 
-* `_quarto.yml` is used to set global YAML settings (including theming and navigation)
-
-* `style.css` is a global CSS style sheet applied to all webpages (sourced in the `.yml` file)
-
-* Individual tutorials are contained within 
-
+---

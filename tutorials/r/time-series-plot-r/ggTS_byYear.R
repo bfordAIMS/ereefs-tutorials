@@ -99,7 +99,7 @@ ggTS_byYear <- function(
   ts_plot <- data %>% 
     ggplot(aes(x = dummy_date, y = {{response_col_name}}, group = plot_period_label, colour = plot_period_label)) + 
     labs(x = "Date", y = "Response",  colour = "Year") + 
-    theme_bw() + 
+    theme_bw(base_size = 14) + 
     scale_x_datetime(breaks = plot_breaks, labels = break_labels, date_minor_breaks = minor_breaks_period)
 
   return(ts_plot)

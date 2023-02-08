@@ -2,12 +2,12 @@
 .title {
   font-weight: bold;
   font-size: 2em;
-  text-indent: 1em;
-  background-image: url("images/home_csiro.jpg");
-  background-size: cover;
-  margin-left: -1em;
+  text-indent: 0.5em;
+  background-image: url("images/title_csiro.jpg");
+  margin-left: -0.5em;
   margin-right: -0.5em;
-  line-height: 2em;
+  line-height: 1.5em;
+  border-radius: 25px;
 }
 body {
   text-align: justify
@@ -33,4 +33,19 @@ h1 {
 .icon {
   height: 30px;
   width: 30px;
+}
+.bottomImage {
+  position:fixed;
+  bottom:0px;
+  left:0px;
+  right:0px;
+  height: 80px;
+  background-image: url("images/home_csiro.jpg");
+  background-image: cover;
+}
+.navbar {
+  height: 65px;
+}
+.navbar-logo {
+  max-height: 45px;
 }

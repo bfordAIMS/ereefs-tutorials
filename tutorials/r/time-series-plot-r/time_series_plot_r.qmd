@@ -2,6 +2,16 @@
 title: "Times Series Plots {{< fa brands r-project >}}"
 ---
 
+```{r chunkOptions, echo=FALSE}
+# Set global code chunk options
+knitr::opts_chunk$set(
+  out.width="75%", 
+  fig.align="center", 
+  message=FALSE, 
+  warning=FALSE
+)
+```
+
 # Topics covered {-}
 
 * Extracting eReefs data using the online data extraction tool
@@ -19,18 +29,20 @@ Heat waves occur in the shallow waters of the Great Barrier Reef (GBR) in much t
 
 Different coral populations along the GBR are adapted to the long-term temperature ranges which may be considered normal for the area in which they live. In general, this means that the northern populations are better able to handle warmer waters than their southern counterparts. Some of these adaptations are encoded in the their genomes and we can imagine that the spread of these warm-adpated genes to the southern GBR would confer some level of resilience to future heat wave events. 
 
-However, major ocean currents along the GBR bifurcate, i.e. split, off the coast of Cairns (Figure \@ref(fig:figCurrents)), creating prevailing northward currents in the waters to the north. It has been suggested that these northward currents may act as a genetic barrier for corals, preventing coral larvae from travelling south and spreading their genes into the Southern GBR. 
+However, major ocean currents along the GBR bifurcate, i.e. split, off the coast of Cairns (@fig-currents), creating prevailing northward currents in the waters to the north. It has been suggested that these northward currents may act as a genetic barrier for corals, preventing coral larvae from travelling south and spreading their genes into the Southern GBR. 
 
 We wish to examine this phenomena on a finer scale to get a sense of how strong and persistant this genetic barrier may be.
 
-```{r figCurrents, echo=FALSE, out.width="75%", fig.align="center", fig.cap="eReefs 2016 yearly mean temperatures (left) and currents (right) for the Great Barrier Reef showing north-to-south temperature gradient and current bifurcation north-east of Cairns (shown in red and orange)."}
+```{r figCurrents, echo=FALSE}
+#| fig-cap: "eReefs 2016 yearly mean temperatures (left) and currents (right) for the Great Barrier Reef showing north-to-south temperature gradient and current bifurcation north-east of Cairns (shown in red and orange)."
+#| label: fig-currents
 knitr::include_graphics("images/gbr4_2016_bifurcation.png")
 ```
 
 
 # Data extraction
 
-Data was extracted from the [eReefs GBR Hydrological Model (4km) v2.0](https://ereefs.aims.gov.au/ereefs-aims/gbr4/temp-wind-salt-current) using the online [data extraction tool](https://extraction.ereefs.aims.gov.au/extract-data) for a single point approximately 60 km south of Lizard Island (shown in Figure \@ref(fig:plotSite)). For this point we extracted the daily aggregated data for the northward current at a depth of 0.5 m (as coral larvae generally travel in the top of the water column) and the northward windspeed (to see if the wind may be a key driver of current speed and direction). Both of these variables have the units of meters per second (m/s), where a positive value indicates the speed of the wind to the north, and a negative value, to the south. We extracted all data between 1 September 2010 - 1 September 2022. 
+Data was extracted from the [eReefs GBR Hydrological Model (4km) v2.0](https://ereefs.aims.gov.au/ereefs-aims/gbr4/temp-wind-salt-current) using the online [data extraction tool](https://extraction.ereefs.aims.gov.au/extract-data) for a single point approximately 60 km south of Lizard Island (shown in @fig-site). For this point we extracted the daily aggregated data for the northward current at a depth of 0.5 m (as coral larvae generally travel in the top of the water column) and the northward windspeed (to see if the wind may be a key driver of current speed and direction). Both of these variables have the units of meters per second (m/s), where a positive value indicates the speed of the wind to the north, and a negative value, to the south. We extracted all data between 1 September 2010 - 1 September 2022. 
 
 This data can be downloaded [here](https://extraction.ereefs.aims.gov.au/data/2211.f8f2a18). **!Replace link after upload (so github tutorial link can be added to data page)!**
 
@@ -39,7 +51,7 @@ This data can be downloaded [here](https://extraction.ereefs.aims.gov.au/data/22
 
 1. Download and install `R` (the programming language) and R Studio (the integrated development environment) following the instructions [here](https://posit.co/download/rstudio-desktop/).
 
-2. [Download the git repository for this tutorial]**LINK HERE**, and unzip the folder in a suitable place on your hard drive.
+2. [Download the git repository for this tutorial](https://github.com/bfordAIMS/ereefs-tutorials/tree/main/tutorials/r/time-series-plot-r), and unzip the folder in a suitable place on your hard drive.
 
 3. Open R Studio and create a new project: File > New Project > Existing Directory > Browse > select the unzipped git tutorial folder created in step 2. 
 
@@ -58,7 +70,7 @@ if (length(not_yet_installed) > 0) install.packages(not_yet_installed) # install
 
 First we need to load in the R packages we will use for this tutorial. 
 
-```{r loadPackages, message=FALSE, warning=FALSE}
+```{r loadPackages}
 # Load R packages:
 library(readr) # faster data importing
 library(tidyverse) # a suite of packages including dplyr, tidyr, ggplot2, stringr
@@ -76,7 +88,7 @@ source("ggTS_byYear.R") # we will go through this function later in the tutorial
 
 The data we have extracted from eReefs is in a CSV file. We will import the data into `R` using the `readr` package's `read_csv` function (which is much faster at reading in large datasets compared to `R`'s base function `read.csv`). We will then apply the `janitor` package's `clean_names` function, which will format the variable names in a way which is much more convenient for use in `R`. 
 
-```{r loadData, message=FALSE, warning=FALSE}
+```{r loadData}
 # Import data:
 data_raw <- read_csv("data/eReefsData.csv")
 data <- data_raw %>% clean_names()
@@ -93,7 +105,10 @@ Lets have a closer look at the site for which we have extracted the eReefs data 
 
 You can find out more about creating `leaflet` maps in `R` [here](https://rstudio.github.io/leaflet/).
 
-```{r plotSite, out.width="75%", fig.align="center", fig.cap="Interactive map showing site for which eReefs data was extracted."}
+```{r plotSite}
+#| fig.cap: "Interactive map showing site for which eReefs data was extracted."
+#| label: fig-site
+
 # Get unique coordinates from data (in this case only one set of lat/lon)
 site_coords <- data.frame(
   lat = unique(data_raw$Latitude), 
@@ -127,14 +142,17 @@ site_map %>%
 
 Since we are interested in gaining some insight into the possibility of northern coral larvae migrating southward through our site, we should have a look at the north-south current velocity data. 
 
-```{r plotTS, out.width="75%", fig.align="center", fig.cap="Time series plot of daily mean northward current velocity."}
+```{r plotTS}
+#| fig-cap: "Time series plot of daily mean northward current velocity."
+#| label: fig-ts
+
 data %>% 
   filter(variable == "v") %>% # select the current variable
   ggplot(aes(x = aggregated_date_time, y = mean)) + # and plot the daily mean
   geom_line(alpha=0.7) + # specify a line graph of the mean
   geom_abline(slope = 0, intercept = 0, color = "red", linewidth = 1) + # add a line a y=0
   scale_x_datetime(date_breaks = "1 year", date_labels = "%Y") + # show only years on x-axis
-  theme_bw() + 
+  theme_bw(base_size=13) + 
   labs(x = "Year", y = "Northward current velocity (m/s)")
 ```
 
@@ -146,7 +164,10 @@ However, in order to get a better idea of what is happening, we should have a cl
 
 We wish to produce the plot below, looking at all our data in an approximate coral spawning season of October through January, for each of the years in our data.
 
-```{r figTSOctFeb, echo=FALSE, message=FALSE, out.width="75%", fig.align="center", fig.cap="Times series plot of daily mean northward current velocity during October through January for each year 2010-11 to 2021-22."}
+```{r figTSOctFeb, echo=FALSE}
+#| fig-cap: "Times series plot of daily mean northward current velocity during October through January for each year 2010-11 to 2021-22."
+#| label: fig-tsOctFeb
+
 data %>% 
   filter(variable == "v") %>%
   ggTS_byYear(aggregated_date_time, mean, start_month=10, end_month=1) + 
@@ -273,7 +294,10 @@ ggTS_byYear <- function(
 
 Now we have our function definition, lets see it in action. Recall that our previous plot was quite cluttered, which made it difficult to discern any trends in the data. So this time, let's plot for just the month of October. 
 
-```{r figTSOct, out.width="75%", fig.align="center", fig.cap="Times series plot of daily mean northward current velocity during October for each year 2010 to 2021."}
+```{r figTSOct}
+#| fig-cap: "Times series plot of daily mean northward current velocity during October for each year 2010 to 2021."
+#| label: fig-tsOct
+
 data %>% 
   filter(variable == "v") %>%
   ggTS_byYear(aggregated_date_time, mean, start_month = 10, end_month = 10) + 
@@ -294,9 +318,13 @@ Let's plot our data across an entire year and use the zoom and pan features to e
 
 We will initially show only the years 2015-16 and 2021-22, as this provides a nice instance of high variability in the northward current in different years. 
 
-```{r plotlyJanDec, out.width="85%", fig.align="center", fig.cap="Interactive plot of daily mean northward current velocity for September through August 2010-11 to 2021-22 (double click years to toggle display of all years)."}
+```{r plotlySepSep}
+#| out.width: "85%"
+#| fig-cap: "Interactive plot of daily mean northward current velocity for September through August 2010-11 to 2021-22 (double click years to toggle display of all years)."
+#| label: fig-plotlySepSep
+
 # Create a ggplot and turn it into a plotly plot
-plotJanDec <- data %>% 
+plotSepSep <- data %>% 
   filter(variable == "v") %>%
   ggTS_byYear(aggregated_date_time, mean, start_month=9, end_month=8) +
   geom_line(linewidth = 0.7) + 
@@ -304,14 +332,14 @@ plotJanDec <- data %>%
   labs(y = "Northward current velocity (m/s)") + 
   theme(legend.position="top")
 
-plotJanDec %>% 
+plotSepSep %>% 
   ggplotly(tooltip = "none") %>% # don't show any information on hover (alternative: "mean" would show mean current)
   style(visible = "legendonly", traces = c(1:5, 7:11))  # don't show years 2010-2014 & 2016-2020 initially
 ```
 
 This plot allows us to see what is happening both in individual years and overall, across all the years. 
 
-Overall we see the trend that we have seen in Figure \@ref(fig:plotTS) where the current is predominantly to the north (positive value), and less variable, in (roughly) April through July with southward currents becoming more frequent and strong in August and peaking in (roughly) September through March.  
+Overall we see the trend that we have seen in @fig-ts where the current is predominantly to the north (positive value), and less variable, in (roughly) April through July with southward currents becoming more frequent and strong in August and peaking in (roughly) September through March.  
 
 Zooming in to our approximate coral spawning season of October through January, we can see that there are often periods of predominant southward currents, however when these periods occur is highly variable between years.
 
@@ -320,7 +348,10 @@ Zooming in to our approximate coral spawning season of October through January, 
 
 Since we are interested in the surface current (i.e. we have data for northward current at 0.5 m depth), it seems reasonable to suspect that the wind may be a key driving force behind the current direction and velocity. Let's examine this suspicion with by looking at the relationship between the mean northward wind and current speeds. 
 
-```{r figWindCurrLine, out.width="75%", fig.align="center", fig.cap="Time series of daily mean northward current and wind velocities for September 2010 to September 2022."}
+```{r figWindCurrLine, fig.height=8, out.width="85%"}
+#| fig-cap: "Time series of daily mean northward current and wind velocities for September 2010 to September 2022."
+#| label: fig-windCurrLine
+
 # Create a wide format dataset (seperate columns for mean current and wind)
 meanWindCurr <- data %>% 
   select(aggregated_date_time, variable, mean) %>% # remove unneeded variables
@@ -339,7 +370,7 @@ data %>%
   geom_hline(yintercept = 0, color = "red", linewidth = 0.5) + # add a line a y=0
   geom_vline(xintercept = 2011:2022, color = "red") + 
   scale_x_datetime(date_breaks = "1 year", date_labels = "%Y")+ # show only years on x-axis
-  theme_bw() + 
+  theme_bw(base_size = 14) + 
   theme(panel.grid.major.x = element_line(color = "black", linewidth = 0.5, linetype = "dotted"),
         panel.grid.minor.x = element_line(color = "grey", linewidth = 0.5, linetype = "dotted"),  
         panel.grid.major.y = element_blank(), panel.grid.minor.y = element_blank()) + 
@@ -347,18 +378,21 @@ data %>%
   facet_wrap(~variable, nrow = 2, scales= "free_y", labeller = labeller(variable = labs))
 ```
 
-In Figure \@ref(fig:figWindCurrLine) we can see that there appears to be a reasonably close relationship between the daily mean northward wind speed and current velocity. This is supported by a Pearson's correlation coefficient of $r=$ `r round(r$estimate, 2)`. We can better visualise this relationship on the scatterplot in Figure \@ref(fig:figWindCurrScatter). 
+In @fig-windCurrLine we can see that there appears to be a reasonably close relationship between the daily mean northward wind speed and current velocity. This is supported by a Pearson's correlation coefficient of $r=$ `r round(r$estimate, 2)`. We can better visualise this relationship on the scatterplot in @fig-windCurrScatter. 
 
 From this data alone we cannot conclude that wind is a driver of current, as it may just be a confounding variable. However, we have at least found a reasonably strong positive relationship between northward windspeed and current.
 
-```{r figWindCurrScatter, warning=FALSE, out.width="75%", fig.align="center", fig.cap="Scatter plot of daily mean northward wind and current velocities for September 2010 to September 2022."}
+```{r figWindCurrScatter}
+#| fig-cap: "Scatter plot of daily mean northward wind and current velocities for September 2010 to September 2022."
+#| label: fig-windCurrScatter
+
 # Scatter plot of daily mean wind and current
 meanWindCurr %>% 
   ggplot(aes(x = wspeed_v, y = v)) +
   geom_point(alpha = 0.2, size = 2) + 
   geom_hline(yintercept = 0, colour = "grey") + 
   geom_vline(xintercept = 0, colour = "grey") + 
-  theme_bw() + 
+  theme_bw(base_size=14) + 
   labs(x = "Northward wind speed (m/s)", y = "Northward current velocity (m/s)")
 ```
 

@@ -3,15 +3,12 @@
 *WORK IN PROGRESS*
 
 
----
-
 # User Overview
 
 This repository holds the source files for the AIMS Knowledge Systems eReefs tutorials hosted at https://bfordaims.github.io/ereefs-tutorials/. 
 
 Currently, a few basic tutorials are available for the languages `R` and `python`. In time we hope to add a wider range of tutorials, including for more advanced concepts. If you wish to see a tutorial on a specific topic you can add a request using the Github Issues feature, though please note that the development of subsequent tutorials is dependent on the time availability of the small number of contributing AIMS staff.
 
----
 
 # Developer Overview
 
@@ -113,7 +110,6 @@ All website files are contained in the git repository `ereefs-tutorials`. This i
 
 `ImportError: DLL load failed: The specified module could not be found.` when rendering a python tutorial. Try the solutions [here](https://stackoverflow.com/questions/20201868/importerror-dll-load-failed-the-specified-module-could-not-be-found) (downloading [Microsoft Visual C++](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) worked for me).
 
----
 
 # Contributing to this project
 

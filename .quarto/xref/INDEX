@@ -46,5 +46,8 @@
   },
   "tutorials/python/processing-data-python/processing_data_python.qmd": {
     "processing_data_python.html": "7a0c2f5d"
+  },
+  "tutorials/r/basic-map-plot-r/basic_map_plot_r.qmd": {
+    "basic_map_plot_r.html": "0dbdb27b"
   }
 }

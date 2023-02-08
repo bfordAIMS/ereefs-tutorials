@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>AIMS eReefs tutorials - Processing eReefs data (wind and current) </title>
+<title>AIMS eReefs tutorials - Processing eReefs data </title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -194,7 +194,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Processing eReefs data (wind and current) <i class="fa-brands fa-python" aria-label="python"></i></h1>
+<h1 class="title">Processing eReefs data <i class="fa-brands fa-python" aria-label="python"></i></h1>
 </div>
 
 
@@ -211,14 +211,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="motivating-problem" class="level1">
 <h1>Motivating problem</h1>
-<p>In this example we use the <a href="https://extraction.ereefs.aims.gov.au/">AIMS eReefs extraction tool</a> to extract time series data for two locations of interest:</p>
+<p>In this example we use eReefs time series data to try answer the question:</p>
+<p><strong><em>How strong does the wind need to be to set the direction of the surface ocean currents?</em></strong></p>
+<p>We use the <a href="https://extraction.ereefs.aims.gov.au/">AIMS eReefs extraction tool</a> to extract data for two locations of interest:</p>
 <ul>
 <li><p>Myrmidon Reef which is on the far outer edge of the GBR and is almost right in the middle of the southern Eastern Australian Current; and</p></li>
 <li><p>Davies Reef which is further in the reef matrix, but in a similar sector of the GBR.</p></li>
 </ul>
 <p>We then process the data and investigate the relationship between the strength of the wind and the direction of the surface currents for two locations.</p>
-<p>We will try to answer the question:</p>
-<p><strong><em>How strong does the wind need to be to set the direction of the surface ocean currents?</em></strong></p>
 </section>
 <section id="analysis-method" class="level1">
 <h1>Analysis method</h1>
@@ -272,10 +272,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"Skipping redownloading extraction data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading extraction data ...</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code>('temp\\2009.c451dc3-collected.csv', &lt;http.client.HTTPMessage object at 0x000002DA594B8F10&gt;)</code></pre>
+<pre><code>Skipping redownloading extraction data</code></pre>
 </div>
 </div>
 </section>
@@ -283,9 +280,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1>Reading and cleaning the data</h1>
 <p>Read the resulting CSV file into a <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/10min.html">Pandas data frame</a>.</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(extractionfile)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(extractionfile)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 
 <div>
@@ -391,8 +388,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Here we can see that data is in <a href="https://towardsdatascience.com/whats-tidy-data-how-to-organize-messy-datasets-in-python-with-melt-and-pivotable-functions-5d52daa996c9">tidy format</a>. That is each observation is in one row per time step, variable, depth and site. For each of these combinations there are summary statistics corresponding to the aggregation process that was applied. Somewhat confusingly we extracted hourly data from the hourly eReefs hydrodynamic model and so there was no aggregation applied. As a result all the stats values are the same and the mean corresponds to the actual extracted data values. Let’s clean this up a little by removing the redundant columns. Here we also drop the depth variable as the depth of the wind doesn’t match the depth of the surface current and so makes it difficult to align the wind and the current together. Since we are only processing a single depth this is an OK simplification. If we were processing the current at multiple depths then we would need a more complex set of data wraggling.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">'median'</span>, <span class="st">'p5'</span>, <span class="st">'p95'</span>, <span class="st">'lowest'</span>,<span class="st">'highest'</span>,<span class="st">'Depth'</span>]).rename(columns<span class="op">=</span>{<span class="st">"mean"</span>: <span class="st">"value"</span>})</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df2.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">'median'</span>, <span class="st">'p5'</span>, <span class="st">'p95'</span>, <span class="st">'lowest'</span>,<span class="st">'highest'</span>,<span class="st">'Depth'</span>]).rename(columns<span class="op">=</span>{<span class="st">"mean"</span>: <span class="st">"value"</span>})</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df2.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 
 <div>
@@ -462,8 +459,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>Next we need to align the wind and current values for a given time step and site on to the same rows of data. Here we are converting the data from tall format to wide format.</p>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df2.pivot(index <span class="op">=</span> [<span class="st">"Site Name"</span>, <span class="st">"Latitude"</span>, <span class="st">"Longitude"</span>, <span class="st">"Aggregated Date/Time"</span>, ], columns<span class="op">=</span><span class="st">"Variable"</span>, values<span class="op">=</span><span class="st">"value"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df3.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> df2.pivot(index <span class="op">=</span> [<span class="st">"Site Name"</span>, <span class="st">"Latitude"</span>, <span class="st">"Longitude"</span>, <span class="st">"Aggregated Date/Time"</span>, ], columns<span class="op">=</span><span class="st">"Variable"</span>, values<span class="op">=</span><span class="st">"value"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df3.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 
 <div>
@@ -550,11 +547,11 @@ a \cdot b = a_x \times b_x + a_y \times b_y
 ||b|| = \sqrt{b^2_x + b^2_y}
 \]</span></p>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df3[<span class="st">'currentmag'</span>] <span class="op">=</span> np.sqrt(df3[<span class="st">'u'</span>]<span class="op">**</span><span class="dv">2</span><span class="op">+</span>df3[<span class="st">'v'</span>]<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df3[<span class="st">'windmag'</span>] <span class="op">=</span> np.sqrt(df3[<span class="st">'wspeed_u'</span>]<span class="op">**</span><span class="dv">2</span><span class="op">+</span>df3[<span class="st">'wspeed_v'</span>]<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df3[<span class="st">'windcurrentcorr'</span>] <span class="op">=</span> (df3[<span class="st">'u'</span>] <span class="op">*</span> df3[<span class="st">'wspeed_u'</span>] <span class="op">+</span> df3[<span class="st">'v'</span>] <span class="op">*</span> df3[<span class="st">'wspeed_v'</span>])<span class="op">/</span>(df3[<span class="st">'currentmag'</span>]<span class="op">*</span>df3[<span class="st">'windmag'</span>])</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>df3.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df3[<span class="st">'currentmag'</span>] <span class="op">=</span> np.sqrt(df3[<span class="st">'u'</span>]<span class="op">**</span><span class="dv">2</span><span class="op">+</span>df3[<span class="st">'v'</span>]<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df3[<span class="st">'windmag'</span>] <span class="op">=</span> np.sqrt(df3[<span class="st">'wspeed_u'</span>]<span class="op">**</span><span class="dv">2</span><span class="op">+</span>df3[<span class="st">'wspeed_v'</span>]<span class="op">**</span><span class="dv">2</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>df3[<span class="st">'windcurrentcorr'</span>] <span class="op">=</span> (df3[<span class="st">'u'</span>] <span class="op">*</span> df3[<span class="st">'wspeed_u'</span>] <span class="op">+</span> df3[<span class="st">'v'</span>] <span class="op">*</span> df3[<span class="st">'wspeed_v'</span>])<span class="op">/</span>(df3[<span class="st">'currentmag'</span>]<span class="op">*</span>df3[<span class="st">'windmag'</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>df3.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 
 <div>
@@ -650,9 +647,9 @@ a \cdot b = a_x \times b_x + a_y \times b_y
 <p>Let’s look at the relationship between the wind and current as a function of the wind speed. Here we are considering each hourly sample as an independent estimate of the relationship. In reality this is not the case as the longer the wind blows the more effect it will have on the current. As this is just a coding example and not an in-depth analysis we don’t need to worry about this limitation of the analysis.</p>
 <p>Let’s pull out the data for Davies and Myrmidon Reefs separately so they are easy to plot.</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>davies <span class="op">=</span> df3.query(<span class="st">'`Site Name` == "Davies Reef"'</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>myrmidon <span class="op">=</span> df3.query(<span class="st">'`Site Name` == "Myrmidon Reef"'</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>myrmidon.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>davies <span class="op">=</span> df3.query(<span class="st">'`Site Name` == "Davies Reef"'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>myrmidon <span class="op">=</span> df3.query(<span class="st">'`Site Name` == "Myrmidon Reef"'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>myrmidon.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 
 <div>
@@ -747,14 +744,14 @@ a \cdot b = a_x \times b_x + a_y \times b_y
 </div>
 <p>Let’s create a scatter plot to see if there is a relationship between the wind and currents.</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>ax<span class="op">=</span>fig.add_axes([<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>ax.scatter(myrmidon[<span class="st">"windmag"</span>],myrmidon[<span class="st">"windcurrentcorr"</span>], color<span class="op">=</span><span class="st">'r'</span>, s<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>ax.scatter(davies[<span class="st">"windmag"</span>],davies[<span class="st">"windcurrentcorr"</span>], color<span class="op">=</span><span class="st">'b'</span>, s<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Wind speed (m/s)'</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Wind-current correlation'</span>)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Correlation between wind and surface current (hourly data, 2019)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>ax<span class="op">=</span>fig.add_axes([<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ax.scatter(myrmidon[<span class="st">"windmag"</span>],myrmidon[<span class="st">"windcurrentcorr"</span>], color<span class="op">=</span><span class="st">'r'</span>, s<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>ax.scatter(davies[<span class="st">"windmag"</span>],davies[<span class="st">"windcurrentcorr"</span>], color<span class="op">=</span><span class="st">'b'</span>, s<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'Wind speed (m/s)'</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Wind-current correlation'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">'Correlation between wind and surface current (hourly data, 2019)'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>Text(0.5, 1.0, 'Correlation between wind and surface current (hourly data, 2019)')</code></pre>
 </div>
@@ -765,25 +762,25 @@ a \cdot b = a_x \times b_x + a_y \times b_y
 <p>This scatter plot shows that the relationship between wind and current is weak. This is not surprising given that we are considering just the hourly samples, with no consideration for how long the wind has been blowing. At low wind conditions the current has an even chance of being aligned with the wind (correlation <span class="math inline">\(r= 1\)</span>) as in the opposite direction (correlation <span class="math inline">\(r= -1\)</span>), however in high wind we can see that there is much more chance that the currents are aligned with the wind.</p>
 <p>To understand this relationship better we want to understand how much the wind nudges the current in its direction. If we bin the wind speeds then collect all the correlation samples in each bin then we can see if they average to zero (indicating that there is no relationship between the wind and current) or there is average alignment.</p>
 <div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>wind <span class="op">=</span> davies[<span class="st">"windmag"</span>]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>current <span class="op">=</span> davies[<span class="st">"windcurrentcorr"</span>]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>bin_means, bin_edges, binnumber <span class="op">=</span> stats.binned_statistic(wind, current, <span class="st">'mean'</span>, bins<span class="op">=</span><span class="dv">20</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.hlines(bin_means, bin_edges[:<span class="op">-</span><span class="dv">1</span>], bin_edges[<span class="dv">1</span>:], colors<span class="op">=</span><span class="st">'g'</span>, lw<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">'Davies Reef'</span>)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>wind <span class="op">=</span> myrmidon[<span class="st">"windmag"</span>]</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>current <span class="op">=</span> myrmidon[<span class="st">"windcurrentcorr"</span>]</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>bin_means, bin_edges, binnumber <span class="op">=</span> stats.binned_statistic(wind, current, <span class="st">'mean'</span>, bins<span class="op">=</span><span class="dv">20</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>plt.hlines(bin_means, bin_edges[:<span class="op">-</span><span class="dv">1</span>], bin_edges[<span class="dv">1</span>:], colors<span class="op">=</span><span class="st">'r'</span>, lw<span class="op">=</span><span class="dv">5</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">'Myrmidon Reef'</span>)</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Wind speed (m/s)'</span>)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Wind-current correlation'</span>)</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Mean correlation between wind and surface current (hourly data, 2019)'</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> stats</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>wind <span class="op">=</span> davies[<span class="st">"windmag"</span>]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>current <span class="op">=</span> davies[<span class="st">"windcurrentcorr"</span>]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>bin_means, bin_edges, binnumber <span class="op">=</span> stats.binned_statistic(wind, current, <span class="st">'mean'</span>, bins<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>plt.hlines(bin_means, bin_edges[:<span class="op">-</span><span class="dv">1</span>], bin_edges[<span class="dv">1</span>:], colors<span class="op">=</span><span class="st">'g'</span>, lw<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">'Davies Reef'</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>wind <span class="op">=</span> myrmidon[<span class="st">"windmag"</span>]</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>current <span class="op">=</span> myrmidon[<span class="st">"windcurrentcorr"</span>]</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>bin_means, bin_edges, binnumber <span class="op">=</span> stats.binned_statistic(wind, current, <span class="st">'mean'</span>, bins<span class="op">=</span><span class="dv">20</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.hlines(bin_means, bin_edges[:<span class="op">-</span><span class="dv">1</span>], bin_edges[<span class="dv">1</span>:], colors<span class="op">=</span><span class="st">'r'</span>, lw<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>           label<span class="op">=</span><span class="st">'Myrmidon Reef'</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Wind speed (m/s)'</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Wind-current correlation'</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Mean correlation between wind and surface current (hourly data, 2019)'</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
-<pre><code>&lt;matplotlib.legend.Legend at 0x2da5ef009d0&gt;</code></pre>
+<pre><code>&lt;matplotlib.legend.Legend at 0x17e0a532760&gt;</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <p><img src="processing_data_python_files/figure-html/cell-10-output-2.png" width="615" height="449"></p>

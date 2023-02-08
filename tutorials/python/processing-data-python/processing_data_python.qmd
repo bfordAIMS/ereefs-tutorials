@@ -1,21 +1,20 @@
 ---
-title: "Processing eReefs data (wind and current) {{< fa brands python >}}"
+title: "Processing eReefs data {{< fa brands python >}}"
 ---
 
 # Motivating problem
 
-In this example we use the [AIMS eReefs extraction tool](https://extraction.ereefs.aims.gov.au/) to extract time series data for two locations of interest:
+In this example we use eReefs time series data to try answer the question:
+
+**_How strong does the wind need to be to set the direction of the surface ocean currents?_**
+
+We use the [AIMS eReefs extraction tool](https://extraction.ereefs.aims.gov.au/) to extract data for two locations of interest:
 
 * Myrmidon Reef which is on the far outer edge of the GBR and is almost right in the middle of the southern Eastern Australian Current; and
 
 * Davies Reef which is further in the reef matrix, but in a similar sector of the GBR.
 
 We then process the data and investigate the relationship between the strength of the wind and the direction of the surface currents for two locations. 
-
-
-We will try to answer the question:
-
-**_How strong does the wind need to be to set the direction of the surface ocean currents?_**
 
 
 # Analysis method

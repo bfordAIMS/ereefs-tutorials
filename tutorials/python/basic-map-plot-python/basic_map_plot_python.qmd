@@ -53,7 +53,6 @@ inputFile
 ```
 
 ```{python}
-'http://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2010-09.nc'
 # The "temperature" variable
 selectedVariable = "temp"
 selectedVariable

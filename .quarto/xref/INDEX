@@ -49,5 +49,8 @@
   },
   "tutorials/r/basic-map-plot-r/basic_map_plot_r.qmd": {
     "basic_map_plot_r.html": "0dbdb27b"
+  },
+  "tutorials/r/thredds-server-access-R/thredds_server_access.qmd": {
+    "thredds_server_access.html": "10adeb56"
   }
 }

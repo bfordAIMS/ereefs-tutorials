@@ -7,6 +7,6 @@ format:
 | Tutorial | Languages |
 |-|-|
 | Plotting time series data | [{{< fa brands r-project >}} R](tutorials/r/time-series-plot-r/time_series_plot_r.html) &emsp; [{{< fa brands python >}} Python](tutorials/python/basic-time-series-plot-python/basic_time_series_plot_python.html)|
-| Plotting eReefs data on a map | [{{< fa brands r-project >}} R](tutorials/r/basic-map-plot-r/basic_map_plot_r.html) &emsp; [{{< fa brands python >}} Python](tutorials/python/basic-map-plot-python/basic_map_plot_python.html) |
+| Accessing data from the eReefs server (OPeNDAP) | [{{< fa brands r-project >}} R](tutorials/r/thredds-server-access-R/thredds_server_access.html) &emsp; [{{< fa brands python >}} Python](tutorials/python/basic-map-plot-python/basic_map_plot_python.html) |
 | Processing eReefs data | [{{< fa brands python >}} Python](tutorials/python/processing-data-python/processing_data_python.html)
 | Or could have icons like this | ![](images/python_logo_notext.png){.icon} |

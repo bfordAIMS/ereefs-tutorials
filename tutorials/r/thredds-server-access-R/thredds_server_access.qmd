@@ -1,0 +1,234 @@
+---
+title: "Accessing eReefs data from the THREDDS server {{< fa brands r-project >}}"
+---
+
+
+In this tutorial we will look at how to access eReefs data directly from the [AIMS THREDDS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html) in R. This server hosts both ?raw and aggregated? eReefs model data in netCDF file format and offers access to the data files via OPeNDAP, HTTP Server, and Web Map Service (WMS). While we could download the data files manually via the HTTPServer link, this becomes cumbersome when downloading multiple files, given their large size. Thankfully, OPeNDAP provides a way to access the data files over the internet and extract only the data we want. 
+
+For example, say we want the daily mean surface temperature at a single location for the last 30 days. If we were to download the 30 individual daily aggregated netCDF files, with each file ~ 350 Mb, this would require us to download over 10 Gb of data just to get 300 numbers. The vast majority of this data would be irrelevant to our needs as the netCDF files contain data for a range of variables, at a range of depths, for many, many locations. However, with OPeNDAP, we can extract the daily mean values directly from the server without downloading any superfluous data.
+
+
+# Navigating the eReefs server
+
+*ADD: Info about the folder and file naming on the AIMS THREDDS Server.*
+
+
+# R packages
+
+```{r loadPackages, message=FALSE, warning=FALSE}
+library(RNetCDF) # package for netcdf manipulation
+library(raster) # package for raster manipulation
+library(ggplot2) # package for plotting
+library(rgdal) # package for geospatial analysis
+```
+
+While the `ncdf4` package is commonly used to work with NetCDF files in R, it does not offer compatibility with OPeNDAP for Windows (only Mac and Linux). For this reason we will use the `RNetCDF` package which offers similar functionality and Windows compatibility with OPeNDAP. Note that if you are using Mac or Linux and wish to use `ncdf4`, the functions used herein have obvious analogues (e.g. `ncdf4::nc_open()` vs. `RNetCDF::open.nc()`).
+
+*ADD:*
+
+`raster` does what?...
+
+`ggplot2` is used to make more advanced plots than the `base::plot` function.
+
+`rgdal` does what? ...
+
+
+
+
+# Basic example
+
+In this example we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth  across the entire scope of the eReefs model. We will then produce a very basic plot of the data.
+
+### Connect to a file on the server
+
+First we need to find the right NetCDF file on the server. The available eReefs data NetCDF files are listed in the [AIMS THREDDS Server catalogue](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will navigate to the eReefs 4 km Hydrodynamic Model daily aggregated data for the month of December 2022 and copy the OPeNDAP data URL.
+
+![](images/server_navigation.gif)
+
+```{r}
+#| code-overflow: wrap
+input_file <- "https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2022-12.nc"
+```
+
+We can then open a connection to this file using the `RNetCDF::open.nc` function.
+
+```{r}
+dailyAgg_dec22 <- open.nc(input_file)
+```
+
+::: {.callout-note appearance="simple"}
+## Downloading NetCDF files
+If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. It is then loaded into R by specifying the path: `open.nc("<path to downloaded file>")`.
+:::
+
+### Print a summary of the file
+
+If we do not know what variables or dimensions are available in the file we have connected to, we can print a summary.
+
+```{r eval=FALSE}
+print.nc(dailyAgg_dec22)
+```
+
+<details><summary>Show output</summary>
+
+```{r echo=FALSE}
+print.nc(dailyAgg_dec22)
+```
+</details>
+
+
+### Extract data from the server
+
+Now that we have an open connection to a file on the server we need to extract the daily mean temperature at 1.5m depth for the 10th of December. 
+
+From the summary output above we can see that there is a variable called `temp` and dimensions:
+
+* `time`: As we have the daily aggregated for the month of December we have 31 time indexs corresponding to the day of the month. As we want data for the 10th, we will select `time=10`.
+* `k`: An index mapping to different depths. From the table below we see that `k=16` corresponds to our depth of interest 1.5 m.
+* `latitude` and `longitude`: 
+
+<details><summary>Table of eReefs depths corresponding to index `k`</summary>
+
+| Index (k) | Hydrodynamic 1km model | Hydrodynamic and BioGeoChemical 4km model |
+| --------- | ---------------------- | ----------------------------------------- |
+| 1         | -140.00 m              | -145.00 m                                 |
+| 2         | -120.00 m              | -120.00 m                                 |
+| 3         | -103.00 m              | -103.00 m                                 |
+| 4         | -88.00 m               | -88.00 m                                  |
+| 5         | -73.00 m               | -73.00 m                                  |
+| 6         | -60.00 m               | -60.00 m                                  |
+| 7         | -49.00 m               | -49.00 m                                  |
+| 8         | -39.50 m               | -39.50 m                                  |
+| 9         | -31.00 m               | -31.00 m                                  |
+| 10        | -24.00 m               | -23.75 m                                  |
+| 11        | -18.00 m               | -17.75 m                                  |
+| 12        | -13.00 m               | -12.75 m                                  |
+| 13        | -9.00 m                | -8.80 m                                   |
+| 14        | -5.25 m                | -5.55 m                                   |
+| 15        | -2.35 m                | -3.00 m                                   |
+| 16        | -0.50 m                | -1.50 m                                   |
+| 17        | n/a                    | -0.50 m                                   |
+
+</details>
+
+```{r}
+selected_variable <- "temp"
+selected_time_index <- 10
+selected_depth_index <- 16
+```
+
+
+
+# Read in the netCDF file contents
+Read in the netCDF file contents and store the latitude, longitude, time and depth data in variables for later use.
+```{r readData}
+#| eval: false
+
+# ---------------------------------------
+# ERROR: THIS LINE IS FAILING TO RUN
+nc_data <- nc_open(input_file)
+# (or maybe just taking a very long time)
+# ---------------------------------------
+
+lon <- ncvar_get(nc_data, "longitude")
+head(lon) # look at the first few entries in the longitude vector
+lat <- ncvar_get(nc_data, "latitude")
+head(lat) # look at the first few entries in the latitude vector
+time <- ncvar_get(nc_data, "time")
+head(time) # look at the first few entries in the time vector
+depth <- ncvar_get(nc_data, "zc")
+head(depth) # look at the first few entries in the depth vector
+```
+
+Read in the data from the selected variable and select the time and depth slice.
+
+```{r}
+#| eval: false
+variableData.slice <- ncvar_get(
+  nc = nc_data,
+  varid = selectedVariable,
+  start = c(1, 1, selectedDepthIndex, selectedTimeIndex),
+  count = c(length(lon), length(lat), 1, 1)
+)
+dim(variableData.slice)
+```
+
+Now that all data is stored in memory, close the netCDF file.
+
+```{r}
+#| eval: false
+nc_close(nc_data)
+print("file closed")
+```
+
+
+# Prepare data
+
+Save the data in a raster. We also need to transpose and flip to orient the data correctly.
+```{r}
+#| eval: false
+r <- raster(t(variableData.slice), xmn = min(lon), xmx = max(lon), ymn = min(lat), ymx = max(lat), crs = CRS("+init=epsg:4326"))
+r <- flip(r, direction = 'y')
+dim(r)
+```
+
+
+# Plotting
+Finally, plot the data.
+
+```{r}
+#| eval: false
+plot(r)
+```
+
+
+---
+
+# Retry with RNetCDF
+
+```{r}
+library(RNetCDF)
+input_file <- "https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2010-09.nc.html"
+input_file
+# The "temperature" variable
+selectedVariable <- "temp"
+selectedVariable
+# 2nd of September 2010
+selectedTimeIndex <- 2
+selectedTimeIndex
+# -1.50 m depth
+selectedDepthIndex <- 16
+selectedDepthIndex
+nc_data <- RNetCDF::open.nc(input_file)
+```
+
+```{r}
+lon <- var.get.nc(nc_data, "longitude")
+head(lon) # look at the first few entries in the longitude vector
+lat <- var.get.nc(nc_data, "latitude")
+head(lat) # look at the first few entries in the latitude vector
+time <- var.get.nc(nc_data, "time")
+head(time) # look at the first few entries in the time vector
+depth <- var.get.nc(nc_data, "zc")
+head(depth) # look at the first few entries in the depth vector
+```
+
+```{r}
+variableData.slice = var.get.nc(
+  ncfile = nc_data, 
+  variable = selectedVariable, 
+  start = c(1, 1, selectedDepthIndex, selectedTimeIndex), 
+  count = c(length(lon), length(lat), 1, 1)
+)
+```
+
+```{r}
+close.nc(nc_data)
+```
+
+
+```{r}
+r <- raster(t(variableData.slice), xmn = min(lon), xmx = max(lon), ymn = min(lat), ymx = max(lat), crs = CRS("+init=epsg:4326"))
+r <- flip(r, direction = 'y')
+dim(r)
+```

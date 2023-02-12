@@ -52,5 +52,17 @@
   },
   "tutorials/r/thredds-server-access-R/thredds_server_access.qmd": {
     "thredds_server_access.html": "10adeb56"
+  },
+  "tutorials/python/server-data-extraction-python/server_data_extraction_python.qmd": {
+    "server_data_extraction_python.html": "289081c0"
+  },
+  "tutorials/r/server-data-extraction-r/server_data_extraction_r.qmd": {
+    "server_data_extraction_r.html": "05789456"
+  },
+  "tutorials/python/server-data-access-python/server_data_access_python.qmd": {
+    "server_data_access_python.html": "718a61c5"
+  },
+  "tutorials/r/server-data-access-r/server_data_access_r.qmd": {
+    "server_data_access_r.html": "a652d23e"
   }
 }

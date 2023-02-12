@@ -127,6 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../../styles.css">
 </head>
@@ -187,15 +188,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#navigating-the-ereefs-server" id="toc-navigating-the-ereefs-server" class="nav-link active" data-scroll-target="#navigating-the-ereefs-server">Navigating the eReefs server</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R packages</a></li>
-  <li><a href="#basic-example" id="toc-basic-example" class="nav-link" data-scroll-target="#basic-example">Basic example</a>
+  <li><a href="#example-basic" id="toc-example-basic" class="nav-link" data-scroll-target="#example-basic">Example (basic)</a>
   <ul class="collapse">
   <li><a href="#connect-to-a-file-on-the-server" id="toc-connect-to-a-file-on-the-server" class="nav-link" data-scroll-target="#connect-to-a-file-on-the-server">Connect to a file on the server</a></li>
   <li><a href="#print-a-summary-of-the-file" id="toc-print-a-summary-of-the-file" class="nav-link" data-scroll-target="#print-a-summary-of-the-file">Print a summary of the file</a></li>
-  <li><a href="#extract-data-from-the-server" id="toc-extract-data-from-the-server" class="nav-link" data-scroll-target="#extract-data-from-the-server">2. Extract data from the server</a></li>
+  <li><a href="#extract-data-from-the-server" id="toc-extract-data-from-the-server" class="nav-link" data-scroll-target="#extract-data-from-the-server">Extract data from the server</a></li>
+  <li><a href="#close-connection-to-file" id="toc-close-connection-to-file" class="nav-link" data-scroll-target="#close-connection-to-file">Close connection to file</a></li>
+  <li><a href="#plot-the-data" id="toc-plot-the-data" class="nav-link" data-scroll-target="#plot-the-data">Plot the data</a></li>
   </ul></li>
-  <li><a href="#prepare-data" id="toc-prepare-data" class="nav-link" data-scroll-target="#prepare-data">Prepare data</a></li>
-  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting">Plotting</a></li>
-  <li><a href="#retry-with-rnetcdf" id="toc-retry-with-rnetcdf" class="nav-link" data-scroll-target="#retry-with-rnetcdf">Retry with RNetCDF</a></li>
+  <li><a href="#example-advanced" id="toc-example-advanced" class="nav-link" data-scroll-target="#example-advanced">Example (advanced)</a></li>
   </ul>
 </nav>
     </div>
@@ -239,8 +240,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><code>ggplot2</code> is used to make more advanced plots than the <code>base::plot</code> function.</p>
 <p><code>rgdal</code> does what? …</p>
 </section>
-<section id="basic-example" class="level1">
-<h1>Basic example</h1>
+<section id="example-basic" class="level1">
+<h1>Example (basic)</h1>
 <p>In this example we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth across the entire scope of the eReefs model. We will then produce a very basic plot of the data.</p>
 <section id="connect-to-a-file-on-the-server" class="level3">
 <h3 class="anchored" data-anchor-id="connect-to-a-file-on-the-server">Connect to a file on the server</h3>
@@ -251,19 +252,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <p>We can then open a connection to this file using the <code>RNetCDF::open.nc</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dailyAgg_dec22 <span class="ot">&lt;-</span> <span class="fu">open.nc</span>(input_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22.nc <span class="ot">&lt;-</span> <span class="fu">open.nc</span>(input_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-note callout callout-style-simple callout-captioned">
-<div class="callout-header d-flex align-content-center">
+<div class="callout-note callout callout-style-simple">
+<div class="callout-body d-flex">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<div class="callout-caption-container flex-fill">
-Downloading NetCDF files
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<div class="callout-body-container">
 <p>If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. It is then loaded into R by specifying the path: <code>open.nc("&lt;path to downloaded file&gt;")</code>.</p>
+</div>
 </div>
 </div>
 </section>
@@ -271,11 +269,11 @@ Downloading NetCDF files
 <h3 class="anchored" data-anchor-id="print-a-summary-of-the-file">Print a summary of the file</h3>
 <p>If we do not know what variables or dimensions are available in the file we have connected to, we can print a summary.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print.nc</span>(dailyAgg_dec22)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> <span class="fu">print.nc</span>(dailyAggDec22.nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <details>
 <summary>
-Show output
+<code>summary</code>
 </summary>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -436,9 +434,32 @@ variables:
 </details>
 </section>
 <section id="extract-data-from-the-server" class="level3">
-<h3 class="anchored" data-anchor-id="extract-data-from-the-server">2. Extract data from the server</h3>
+<h3 class="anchored" data-anchor-id="extract-data-from-the-server">Extract data from the server</h3>
 <p>Now that we have an open connection to a file on the server we need to extract the daily mean temperature at 1.5m depth for the 10th of December.</p>
-<p>From the summary output above we can see that there is a variable called <code>temp</code> and dimensions <code>time</code> and <code>k</code>. <code>k</code> is an index corresponding to different depths. From the table below we see that it is <code>k=16</code> which corresponds to a depth of 1.5 m.</p>
+<p>From the summary output above we can see that the variable corresponding to temperature is</p>
+<p><span class="math inline">\(\texttt{temp(longitude, latitude, k, time)}\)</span></p>
+<p>The dimensions for temperature are in brackets. This means that there is a temperature value for every combination of longitude, latitude, depth (k) and time. We can now see why these NetCDF files are so large.</p>
+<p>To extract the data we will use the function</p>
+<p><code>RNetCDF::var.get.nc(ncfile, variable, start=NA, count=NA, ...)</code></p>
+<p>We need to give the function:</p>
+<ul>
+<li><code>ncfile</code>: a NetCDF file connection; in our case <code>dailyAggDec22.nc</code>.</li>
+<li><code>variable</code>: the name or id of the data variable we wish to extract; in our case <code>"temp"</code>.</li>
+<li><code>start</code>: a vector of indices of where to start getting data, one for each dimension of the variable. Since we have <span class="math inline">\(\texttt{temp(longitude, latitude, k, time)}\)</span> we need to tell the function where to start getting data along each of the four dimensions.</li>
+<li><code>count</code>: similar to start, but specifying the number of temperature values to extract along each dimension.</li>
+</ul>
+<p>Let’s look at how to construct our <code>start</code> and <code>count</code> vectors.</p>
+<div class="callout-note callout callout-style-simple">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The default values of <code>start</code> and <code>count</code> are <code>NA</code>, in which case all data for the given <code>variable</code> will be extracted.</p>
+</div>
+</div>
+</div>
+<p><strong>Depth</strong>: Starting with depth is easy because we have a constant value of interest (1.5 m). The index <code>k</code> corresponds to different depths as shown in the table below, where we see <code>k=16</code> maps to a depth of 1.5 m.</p>
 <details>
 <summary>
 Table of eReefs depths corresponding to index <code>k</code>
@@ -453,7 +474,7 @@ Table of eReefs depths corresponding to index <code>k</code>
 <tr class="header">
 <th>Index (k)</th>
 <th>Hydrodynamic 1km model</th>
-<th>Hydrodynamic and BioGeoChemical 4km model</th>
+<th>Hydrodynamic &amp; BioGeoChemical 4km models</th>
 </tr>
 </thead>
 <tbody>
@@ -545,138 +566,110 @@ Table of eReefs depths corresponding to index <code>k</code>
 </tbody>
 </table>
 </details>
+<p><strong>Time</strong>: Since we have the daily aggregated data for December 2022, and are interested only in a single day (the 10th), <code>time</code> is also a constant value. From the summary output we can see we have 31 time indexs, these correspond to the day of the month, therefore we want <code>time=10</code>.</p>
+<p><strong>Longitude and latitude</strong>: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want to start at index 1 and count for the entire length of the two dimensions. We could note the lengths from the summary output, where we see <span class="math inline">\(\texttt{longitude = 491}\)</span> and <span class="math inline">\(\texttt{latitude = 723}\)</span>. However we could also get the lengths programatically.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>selected_variable <span class="ot">&lt;-</span> <span class="st">"temp"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lon <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(dailyAggDec22.nc, <span class="st">"longitude"</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>lat <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(dailyAggDec22.nc, <span class="st">"latitude"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="fu">length</span>(lon), <span class="fu">length</span>(lat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  length.lon. length.lat.
+1         491         723</code></pre>
 </div>
-<p><strong>selectedTimeIndex</strong> The time slice in the netCDF file. For example, in the netCDF file “EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2010-09.nc” the time steps are “days”. This means if you select <code>selectedTimeIndex=2</code> it refers to the second day in this file, which is 02/09/2010. - <strong>selectedDepthIndex</strong> The depth slice in the netCDF file. See the following table for a mapping of index to value:</p>
-<hr>
-<p>input_file # The “temperature” variable selectedVariable &lt;- “temp” selectedVariable # 2nd of September 2010 selectedTimeIndex &lt;- 2 selectedTimeIndex # -1.50 m depth selectedDepthIndex &lt;- 16 selectedDepthIndex</p>
-<pre><code>
-
-# Read in the netCDF file contents
-Read in the netCDF file contents and store the latitude, longitude, time and depth data in variables for later use.
-::: {.cell}
-
-```{.r .cell-code}
-# ---------------------------------------
-# ERROR: THIS LINE IS FAILING TO RUN
-nc_data &lt;- nc_open(input_file)
-# (or maybe just taking a very long time)
-# ---------------------------------------
-
-lon &lt;- ncvar_get(nc_data, "longitude")
-head(lon) # look at the first few entries in the longitude vector
-lat &lt;- ncvar_get(nc_data, "latitude")
-head(lat) # look at the first few entries in the latitude vector
-time &lt;- ncvar_get(nc_data, "time")
-head(time) # look at the first few entries in the time vector
-depth &lt;- ncvar_get(nc_data, "zc")
-head(depth) # look at the first few entries in the depth vector</code></pre>
-<p>:::</p>
-<p>Read in the data from the selected variable and select the time and depth slice.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>variableData.slice <span class="ot">&lt;-</span> <span class="fu">ncvar_get</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">nc =</span> nc_data,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">varid =</span> selectedVariable,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, selectedDepthIndex, selectedTimeIndex),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">count =</span> <span class="fu">c</span>(<span class="fu">length</span>(lon), <span class="fu">length</span>(lat), <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(variableData.slice)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Now that all data is stored in memory, close the netCDF file.</p>
+<div class="callout-note callout callout-style-simple">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The dimensions of the NetCDF file have corresponding variables. Note that the dimension <span class="math inline">\(\texttt{k}\)</span> has a corresponding variable <code>zc</code> (see summary output). Therefore we would extract the dimension <span class="math inline">\(\texttt{k}\)</span> variable with <code>var.get.nc(..., variable = "zc")</code>.</p>
+</div>
+</div>
+</div>
+<p>Now we are ready to construct our <code>start</code> and <code>count</code> vectors and extract the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nc_close</span>(nc_data)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="st">"file closed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup start and count vectors:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>time_i <span class="ot">&lt;-</span> <span class="dv">10</span>   <span class="co"># index time = 10 --&gt; 10th day of month</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>depth_i <span class="ot">&lt;-</span> <span class="dv">16</span>  <span class="co"># index k = 16 --&gt; depth = 1.5 m</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, depth_i, time_i)  </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">length</span>(lon), <span class="fu">length</span>(lat), <span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall the order of the dimensions: (lon, lat, k , time).</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># We start at lon=1, lat=1, k=16, time=10 and get temps for</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># every lon and lat while holding depth and time constant.</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract data:</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncfile =</span> dailyAggDec22.nc, </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="st">"temp"</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> start, </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">count =</span> count</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the size of our extracted data</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(temps_10Dec22_1p5m)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">nrows =</span> dims[<span class="dv">1</span>], <span class="at">ncols =</span> dims[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  nrows ncols
+1   491   723</code></pre>
+</div>
 </div>
 </section>
+<section id="close-connection-to-file" class="level3">
+<h3 class="anchored" data-anchor-id="close-connection-to-file">Close connection to file</h3>
+<p>Now that our extracted data is stored in memory, we should close the connection to the NetCDF file on the server.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">close.nc</span>(dailyAggDec22.nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="prepare-data" class="level1">
-<h1>Prepare data</h1>
+<section id="plot-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="plot-the-data">Plot the data</h3>
 <p>Save the data in a raster. We also need to transpose and flip to orient the data correctly.</p>
+<p><em>ADD</em>: why do we need to flip and transpose? Explain CRS (same for all ereefs netcdfs?)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="fu">t</span>(variableData.slice), <span class="at">xmn =</span> <span class="fu">min</span>(lon), <span class="at">xmx =</span> <span class="fu">max</span>(lon), <span class="at">ymn =</span> <span class="fu">min</span>(lat), <span class="at">ymx =</span> <span class="fu">max</span>(lat), <span class="at">crs =</span> <span class="fu">CRS</span>(<span class="st">"+init=epsg:4326"</span>))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">flip</span>(r, <span class="at">direction =</span> <span class="st">'y'</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>temps_raster <span class="ot">&lt;-</span> temps_10Dec22_1p5m <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">|&gt;</span>   <span class="co"># transpose temps</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">raster</span>(  <span class="co"># create raster</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmn =</span> <span class="fu">min</span>(lon), <span class="at">xmx =</span> <span class="fu">max</span>(lon), </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymn =</span> <span class="fu">min</span>(lat), <span class="at">ymx =</span> <span class="fu">max</span>(lat), </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">crs =</span> <span class="fu">CRS</span>(<span class="st">"+init=epsg:4326"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flip</span>(<span class="at">direction =</span> <span class="st">'y'</span>) <span class="co"># flip the raster</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>temps_raster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class      : RasterLayer 
+dimensions : 723, 491, 354993  (nrow, ncol, ncell)
+resolution : 0.0299389, 0.02995851  (x, y)
+extent     : 142.1688, 156.8688, -28.69602, -7.036022  (xmin, xmax, ymin, ymax)
+crs        : +proj=longlat +datum=WGS84 +no_defs 
+source     : memory
+names      : layer 
+values     : 22.08588, 32.48817  (min, max)</code></pre>
+</div>
+</div>
+<div class="callout-note callout callout-style-simple">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>In the code chunk above we use a <a href="https://r4ds.hadley.nz/workflow-pipes.html">pipe</a> <code>|&gt;</code>. Pipes are very useful when passing a dataset through a sequence of functions. In the code above we take our extracted temps, transpose them, turn them into a raster, and then flip the raster. The final result is saved to <code>temps_raster</code>.</p>
+</div>
+</div>
+</div>
+<p>Now we have our temperature data as a raster (in the correct orientation), producing a simple plot is easy.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(temps_raster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="server_data_access_r_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 </section>
-<section id="plotting" class="level1">
-<h1>Plotting</h1>
-<p>Finally, plot the data.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<hr>
 </section>
-<section id="retry-with-rnetcdf" class="level1">
-<h1>Retry with RNetCDF</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RNetCDF)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>input_file <span class="ot">&lt;-</span> <span class="st">"https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2010-09.nc.html"</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>input_file</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2010-09.nc.html"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The "temperature" variable</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>selectedVariable <span class="ot">&lt;-</span> <span class="st">"temp"</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>selectedVariable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "temp"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2nd of September 2010</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>selectedTimeIndex <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>selectedTimeIndex</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -1.50 m depth</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>selectedDepthIndex <span class="ot">&lt;-</span> <span class="dv">16</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>selectedDepthIndex</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 16</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>nc_data <span class="ot">&lt;-</span> RNetCDF<span class="sc">::</span><span class="fu">open.nc</span>(input_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>lon <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(nc_data, <span class="st">"longitude"</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(lon) <span class="co"># look at the first few entries in the longitude vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 142.1688 142.1988 142.2288 142.2588 142.2888 142.3188</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>lat <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(nc_data, <span class="st">"latitude"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(lat) <span class="co"># look at the first few entries in the latitude vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -28.69602 -28.66602 -28.63602 -28.60602 -28.57602 -28.54602</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>time <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(nc_data, <span class="st">"time"</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(time) <span class="co"># look at the first few entries in the time vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 7548 7549 7550 7551 7552 7553</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>depth <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(nc_data, <span class="st">"zc"</span>)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(depth) <span class="co"># look at the first few entries in the depth vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -145 -120 -103  -88  -73  -60</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>variableData.slice <span class="ot">=</span> <span class="fu">var.get.nc</span>(</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncfile =</span> nc_data, </span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> selectedVariable, </span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, selectedDepthIndex, selectedTimeIndex), </span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">count =</span> <span class="fu">c</span>(<span class="fu">length</span>(lon), <span class="fu">length</span>(lat), <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">close.nc</span>(nc_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">raster</span>(<span class="fu">t</span>(variableData.slice), <span class="at">xmn =</span> <span class="fu">min</span>(lon), <span class="at">xmx =</span> <span class="fu">max</span>(lon), <span class="at">ymn =</span> <span class="fu">min</span>(lat), <span class="at">ymx =</span> <span class="fu">max</span>(lat), <span class="at">crs =</span> <span class="fu">CRS</span>(<span class="st">"+init=epsg:4326"</span>))</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">flip</span>(r, <span class="at">direction =</span> <span class="st">'y'</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 723 491   1</code></pre>
-</div>
-</div>
+<section id="example-advanced" class="level1">
+<h1>Example (advanced)</h1>
 
 
 </section>

@@ -64,3 +64,14 @@ p.caption {
 .cell-code {
   text-align: left
 }
+summary {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+.code {
+  font-family: monospace;
+  font-size: 1em;
+}
+.math {
+  font-size: medium;
+}

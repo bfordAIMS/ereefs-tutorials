@@ -130,7 +130,7 @@ All website files are contained in the git repository `ereefs-tutorials`. This i
 
 4. Push changes to the repository only after the *entire* website has rendered successfully (rather than just the specific tutorial) and you have tested it in a browser window (including a check that links work as desired). This will ensure the website will not break the next time it is rendered as a whole. 
 
-5. If multiple are working on the website concurrently, take care to avoid merge conflicts. For example, only update a single tutorial at a time and push it to git before moving to another tutorial.
+5. Check file links are correct. 
 
 6. Update this `README.md` documentation file as you go, including the resolution of any errors/issues you have encountered. 
 

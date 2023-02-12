@@ -1,5 +1,5 @@
 ---
-title: "Plot eReefs map data {{< fa brands python >}} Python"
+title: "Accessing eReefs data from the AIMS server {{< fa brands python >}} Python"
 ---
 
 ## Load the required Python libraries

@@ -1,5 +1,5 @@
 ---
-title: "Accessing eReefs data from the THREDDS server {{< fa brands r-project >}}"
+title: "Accessing eReefs data from the AIMS server {{< fa brands r-project >}}"
 ---
 
 

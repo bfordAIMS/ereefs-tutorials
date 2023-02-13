@@ -209,6 +209,6 @@ plot(temps_raster)
 ```
 
 
-# Example (advanced)
+# Example 2: Accessing multiple files programmatically
 
 

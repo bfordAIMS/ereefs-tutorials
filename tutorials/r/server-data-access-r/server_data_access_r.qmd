@@ -16,26 +16,17 @@ For example, say we want the daily mean surface temperature at a single location
 # R packages
 
 ```{r loadPackages, message=FALSE, warning=FALSE}
-library(RNetCDF) # package for netcdf manipulation
-library(raster) # package for raster manipulation
-library(ggplot2) # package for plotting
+library(RNetCDF) # working with netcdf files (incl. via OPeNDAP)
+library(raster) # creating and manipuling rasters
 library(rgdal) # package for geospatial analysis
 ```
 
-While the `ncdf4` package is commonly used to work with NetCDF files in R, it does not offer compatibility with OPeNDAP for Windows (only Mac and Linux). For this reason we will use the `RNetCDF` package which offers similar functionality and Windows compatibility with OPeNDAP. Note that if you are using Mac or Linux and wish to use `ncdf4`, the functions used herein have obvious analogues (e.g. `ncdf4::nc_open()` vs. `RNetCDF::open.nc()`).
-
-*ADD:*
-
-`raster` does what?...
-
-`ggplot2` is used to make more advanced plots than the `base::plot` function.
-
-`rgdal` does what? ...
+:::{.callout-note appearance="simple"}
+While the `ncdf4` package is commonly used to work with NetCDF files in R, it does not offer compatibility with OPeNDAP for Windows (only Mac and Linux). For this reason we will use the `RNetCDF` package which offers similar functionality and Windows compatibility with OPeNDAP. Note that if you are using Mac or Linux and wish to use `ncdf4`, the functions used herein have obvious analogues; for example `ncdf4::nc_open()` vs. `RNetCDF::open.nc()`.
+:::
 
 
-
-
-# Example (basic)
+# Example 1: Basic server access
 
 In this example we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth  across the entire scope of the eReefs model. We will then produce a very basic plot of the data.
 
@@ -57,7 +48,7 @@ dailyAggDec22.nc <- open.nc(input_file)
 ```
 
 ::: {.callout-note appearance="simple"}
-If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. It is then loaded into R by specifying the path: `open.nc("<path to downloaded file>")`.
+If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. The file can then be loaded into R by specifying the path: `open.nc("<path to downloaded file>")`.
 :::
 
 ### Print a summary of the file
@@ -80,9 +71,7 @@ print.nc(dailyAggDec22.nc)
 
 Now that we have an open connection to a file on the server we need to extract the daily mean temperature at 1.5m depth for the 10th of December. 
 
-From the summary output above we can see that the variable corresponding to temperature is  
-
-$\texttt{temp(longitude, latitude, k, time)}$ 
+From the summary output above we can see that the variable corresponding to temperature is: $\texttt{ temp(longitude, latitude, k, time)}$.
 
 The dimensions for temperature are in brackets. This means that there is a temperature value for every combination of longitude, latitude, depth (k) and time. We can now see why these NetCDF files are so large.
 
@@ -132,7 +121,7 @@ The default values of `start` and `count` are `NA`, in which case all data for t
 
 **Time**: Since we have the daily aggregated data for December 2022, and are interested only in a single day (the 10th), `time` is also a constant value. From the summary output we can see we have 31 time indexs, these correspond to the day of the month, therefore we want `time=10`.
 
-**Longitude and latitude**: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want to start at index 1 and count for the entire length of the two dimensions. We could note the lengths from the summary output, where we see $\texttt{longitude = 491}$ and $\texttt{latitude = 723}$. However we could also get the lengths programatically. 
+**Longitude and latitude**: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want to start at index 1 and count for the entire length of latitude and longitude. To get the lengths we could note the values from the summary output, where we see $\texttt{longitude = 491}$ and $\texttt{latitude = 723}$. However we could also get the lengths programatically. 
 
 ```{r}
 lon <- var.get.nc(dailyAggDec22.nc, "longitude")
@@ -141,29 +130,37 @@ data.frame(length(lon), length(lat))
 ```
 
 :::{.callout-note appearance="simple"}
-The dimensions of the NetCDF file have corresponding variables. Note that the dimension $\texttt{k}$ has a corresponding variable `zc` (see summary output). Therefore we would extract the dimension $\texttt{k}$ variable with `var.get.nc(..., variable = "zc")`.
+Within the eReefs netCDF files, the dimensions $\texttt{longitude, latitude, k, time}$ have corresponding variables `longitude`, `latitude`, `zc`, `time` (see summary output). Note that we would extract the dimension $\texttt{k}$ variable with `var.get.nc(..., variable = "zc")`.
 :::
 
 
 Now we are ready to construct our `start` and `count` vectors and extract the data. 
 
 ```{r}
-# Setup start and count vectors:
-time_i <- 10   # index time = 10 --> 10th day of month
-depth_i <- 16  # index k = 16 --> depth = 1.5 m
-
-start <- c(1, 1, depth_i, time_i)  
-count <- c(length(lon), length(lat), 1, 1)
-# Recall the order of the dimensions: (lon, lat, k , time).
+# SETUP START AND COUNT VECTORS
+# Recall the order of the dimensions: (lon, lat, k , time)
 # We start at lon=1, lat=1, k=16, time=10 and get temps for
-# every lon and lat while holding depth and time constant.
+# every lon and lat while holding depth and time constant
 
-# Extract data:
+lon_st <- 1
+lat_st <- 1
+depth_st <- 16  # index k = 16 --> depth = 1.5 m
+time_st <- 10   # index time = 10 --> 10th day of month
+
+lon_ct <- length(lon) # get temps for all lons and lats
+lat_ct <- length(lat)
+time_ct <- 1  # Hold time and depth constant
+depth_ct <- 1
+
+start_vector <- c(lon_st, lat_st, depth_st, time_st)  
+count_vector <- c(lon_ct, lat_ct, time_ct, depth_ct)
+
+# EXTRACT DATA
 temps_10Dec22_1p5m <- var.get.nc(
   ncfile = dailyAggDec22.nc, 
   variable = "temp",
-  start = start, 
-  count = count
+  start = start_vector, 
+  count = count_vector
 )
 
 # Get the size of our extracted data

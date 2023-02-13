@@ -188,7 +188,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#navigating-the-ereefs-server" id="toc-navigating-the-ereefs-server" class="nav-link active" data-scroll-target="#navigating-the-ereefs-server">Navigating the eReefs server</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R packages</a></li>
-  <li><a href="#example-basic" id="toc-example-basic" class="nav-link" data-scroll-target="#example-basic">Example (basic)</a>
+  <li><a href="#example-1-basic-server-access" id="toc-example-1-basic-server-access" class="nav-link" data-scroll-target="#example-1-basic-server-access">Example 1: Basic server access</a>
   <ul class="collapse">
   <li><a href="#connect-to-a-file-on-the-server" id="toc-connect-to-a-file-on-the-server" class="nav-link" data-scroll-target="#connect-to-a-file-on-the-server">Connect to a file on the server</a></li>
   <li><a href="#print-a-summary-of-the-file" id="toc-print-a-summary-of-the-file" class="nav-link" data-scroll-target="#print-a-summary-of-the-file">Print a summary of the file</a></li>
@@ -229,19 +229,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="r-packages" class="level1">
 <h1>R packages</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RNetCDF) <span class="co"># package for netcdf manipulation</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster) <span class="co"># package for raster manipulation</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># package for plotting</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgdal) <span class="co"># package for geospatial analysis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RNetCDF) <span class="co"># working with netcdf files (incl. via OPeNDAP)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(raster) <span class="co"># creating and manipuling rasters</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgdal) <span class="co"># package for geospatial analysis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>While the <code>ncdf4</code> package is commonly used to work with NetCDF files in R, it does not offer compatibility with OPeNDAP for Windows (only Mac and Linux). For this reason we will use the <code>RNetCDF</code> package which offers similar functionality and Windows compatibility with OPeNDAP. Note that if you are using Mac or Linux and wish to use <code>ncdf4</code>, the functions used herein have obvious analogues (e.g.&nbsp;<code>ncdf4::nc_open()</code> vs.&nbsp;<code>RNetCDF::open.nc()</code>).</p>
-<p><em>ADD:</em></p>
-<p><code>raster</code> does what?…</p>
-<p><code>ggplot2</code> is used to make more advanced plots than the <code>base::plot</code> function.</p>
-<p><code>rgdal</code> does what? …</p>
+<div class="callout-note callout callout-style-simple">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>While the <code>ncdf4</code> package is commonly used to work with NetCDF files in R, it does not offer compatibility with OPeNDAP for Windows (only Mac and Linux). For this reason we will use the <code>RNetCDF</code> package which offers similar functionality and Windows compatibility with OPeNDAP. Note that if you are using Mac or Linux and wish to use <code>ncdf4</code>, the functions used herein have obvious analogues; for example <code>ncdf4::nc_open()</code> vs.&nbsp;<code>RNetCDF::open.nc()</code>.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="example-basic" class="level1">
-<h1>Example (basic)</h1>
+<section id="example-1-basic-server-access" class="level1">
+<h1>Example 1: Basic server access</h1>
 <p>In this example we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth across the entire scope of the eReefs model. We will then produce a very basic plot of the data.</p>
 <section id="connect-to-a-file-on-the-server" class="level3">
 <h3 class="anchored" data-anchor-id="connect-to-a-file-on-the-server">Connect to a file on the server</h3>
@@ -260,7 +264,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. It is then loaded into R by specifying the path: <code>open.nc("&lt;path to downloaded file&gt;")</code>.</p>
+<p>If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. The file can then be loaded into R by specifying the path: <code>open.nc("&lt;path to downloaded file&gt;")</code>.</p>
 </div>
 </div>
 </div>
@@ -436,8 +440,7 @@ variables:
 <section id="extract-data-from-the-server" class="level3">
 <h3 class="anchored" data-anchor-id="extract-data-from-the-server">Extract data from the server</h3>
 <p>Now that we have an open connection to a file on the server we need to extract the daily mean temperature at 1.5m depth for the 10th of December.</p>
-<p>From the summary output above we can see that the variable corresponding to temperature is</p>
-<p><span class="math inline">\(\texttt{temp(longitude, latitude, k, time)}\)</span></p>
+<p>From the summary output above we can see that the variable corresponding to temperature is: <span class="math inline">\(\texttt{ temp(longitude, latitude, k, time)}\)</span>.</p>
 <p>The dimensions for temperature are in brackets. This means that there is a temperature value for every combination of longitude, latitude, depth (k) and time. We can now see why these NetCDF files are so large.</p>
 <p>To extract the data we will use the function</p>
 <p><code>RNetCDF::var.get.nc(ncfile, variable, start=NA, count=NA, ...)</code></p>
@@ -567,7 +570,7 @@ Table of eReefs depths corresponding to index <code>k</code>
 </table>
 </details>
 <p><strong>Time</strong>: Since we have the daily aggregated data for December 2022, and are interested only in a single day (the 10th), <code>time</code> is also a constant value. From the summary output we can see we have 31 time indexs, these correspond to the day of the month, therefore we want <code>time=10</code>.</p>
-<p><strong>Longitude and latitude</strong>: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want to start at index 1 and count for the entire length of the two dimensions. We could note the lengths from the summary output, where we see <span class="math inline">\(\texttt{longitude = 491}\)</span> and <span class="math inline">\(\texttt{latitude = 723}\)</span>. However we could also get the lengths programatically.</p>
+<p><strong>Longitude and latitude</strong>: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want to start at index 1 and count for the entire length of latitude and longitude. To get the lengths we could note the values from the summary output, where we see <span class="math inline">\(\texttt{longitude = 491}\)</span> and <span class="math inline">\(\texttt{latitude = 723}\)</span>. However we could also get the lengths programatically.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lon <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(dailyAggDec22.nc, <span class="st">"longitude"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>lat <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(dailyAggDec22.nc, <span class="st">"latitude"</span>)</span>
@@ -583,33 +586,41 @@ Table of eReefs depths corresponding to index <code>k</code>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>The dimensions of the NetCDF file have corresponding variables. Note that the dimension <span class="math inline">\(\texttt{k}\)</span> has a corresponding variable <code>zc</code> (see summary output). Therefore we would extract the dimension <span class="math inline">\(\texttt{k}\)</span> variable with <code>var.get.nc(..., variable = "zc")</code>.</p>
+<p>Within the eReefs netCDF files, the dimensions <span class="math inline">\(\texttt{longitude, latitude, k, time}\)</span> have corresponding variables <code>longitude</code>, <code>latitude</code>, <code>zc</code>, <code>time</code> (see summary output). Note that we would extract the dimension <span class="math inline">\(\texttt{k}\)</span> variable with <code>var.get.nc(..., variable = "zc")</code>.</p>
 </div>
 </div>
 </div>
 <p>Now we are ready to construct our <code>start</code> and <code>count</code> vectors and extract the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup start and count vectors:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>time_i <span class="ot">&lt;-</span> <span class="dv">10</span>   <span class="co"># index time = 10 --&gt; 10th day of month</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>depth_i <span class="ot">&lt;-</span> <span class="dv">16</span>  <span class="co"># index k = 16 --&gt; depth = 1.5 m</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, depth_i, time_i)  </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>count <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">length</span>(lon), <span class="fu">length</span>(lat), <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall the order of the dimensions: (lon, lat, k , time).</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># We start at lon=1, lat=1, k=16, time=10 and get temps for</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># every lon and lat while holding depth and time constant.</span></span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SETUP START AND COUNT VECTORS</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Recall the order of the dimensions: (lon, lat, k , time)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># We start at lon=1, lat=1, k=16, time=10 and get temps for</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># every lon and lat while holding depth and time constant</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>lon_st <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>lat_st <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>depth_st <span class="ot">&lt;-</span> <span class="dv">16</span>  <span class="co"># index k = 16 --&gt; depth = 1.5 m</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>time_st <span class="ot">&lt;-</span> <span class="dv">10</span>   <span class="co"># index time = 10 --&gt; 10th day of month</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract data:</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncfile =</span> dailyAggDec22.nc, </span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="st">"temp"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> start, </span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">count =</span> count</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>lon_ct <span class="ot">&lt;-</span> <span class="fu">length</span>(lon) <span class="co"># get temps for all lons and lats</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>lat_ct <span class="ot">&lt;-</span> <span class="fu">length</span>(lat)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>time_ct <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># Hold time and depth constant</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>depth_ct <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>start_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(lon_st, lat_st, depth_st, time_st)  </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>count_vector <span class="ot">&lt;-</span> <span class="fu">c</span>(lon_ct, lat_ct, time_ct, depth_ct)</span>
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the size of our extracted data</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(temps_10Dec22_1p5m)</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">nrows =</span> dims[<span class="dv">1</span>], <span class="at">ncols =</span> dims[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># EXTRACT DATA</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">ncfile =</span> dailyAggDec22.nc, </span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="st">"temp"</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">start =</span> start_vector, </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">count =</span> count_vector</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the size of our extracted data</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>dims <span class="ot">&lt;-</span> <span class="fu">dim</span>(temps_10Dec22_1p5m)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">nrows =</span> dims[<span class="dv">1</span>], <span class="at">ncols =</span> dims[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  nrows ncols
 1   491   723</code></pre>

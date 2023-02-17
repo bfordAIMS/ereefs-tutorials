@@ -64,5 +64,8 @@
   },
   "tutorials/r/server-data-access-r/server_data_access_r.qmd": {
     "server_data_access_r.html": "a652d23e"
+  },
+  "tutorials/r/animal-tracking-data-r/animal_tracking_data_r.qmd": {
+    "animal_tracking_data_r.html": "c14d8c64"
   }
 }

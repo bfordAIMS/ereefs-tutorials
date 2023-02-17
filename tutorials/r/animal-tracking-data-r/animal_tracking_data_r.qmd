@@ -1,0 +1,71 @@
+---
+title: "Adding eReefs data to animal tracking detections {{< fa brands r-project >}}"
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
+```
+
+
+:::{.callout-note appearance="simple"}
+This tutorial builds on the techniques introduced in [Accessing eReefs data from the AIMS server](../server-data-access-r/server_data_access_r.html).
+:::
+
+We will look at how to get eReefs point data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html)corresponding to the logged locations of tagged marine animals.
+
+## R packages
+```{r}
+library(readr) # to efficiently read in data
+library(janitor) # to create clean variable names
+library(tidyverse) # for data manipulation and plotting with ggplot2
+library(lubridate) # for working with date and time variables 
+library(leaflet) # to create an interactive map of the tracking locations
+```
+
+## Tracking marine animals
+
+Marine animals are commonly tracked using either acoustic or satellite tags. These tags are attached to the animals and transmit signals back to recievers, logging the animal's location -- and possibly other data such as depth, temperature, and animal movement profiles -- at different points in time. 
+
+Acoustic tracking requires a network of recievers to be placed in the ocean in order to pick up the tags' transmitted signals when they come within range (typically about 500 m). Acoustic tracking has the advantage of being able transmit and recieve signals underwater, however is limited by the coverage of the reciever network and whether this is suitable for a given species and research question. In some instances, researchers do without the reciever network and follow the animals around in a boat to recieve the data.
+
+Satellite tracking, on the other hand, is able to track animals over virtually the entire ocean as the tags transmit signals to a network of satellites orbiting the earth. However, unlike acoustic tags, the signals cannot be transmitted through water and the tagged animals must breach the ocean surface in order to have their location logged and other recorded data, such as depth and temperature profiles, be recieved. The accuracy of the logged location depends on the quality of the transmitted signal. For high-quality signals, the location uncertainty can be in the hundreds of metres, however for bad quality signals this can blow out to over 10 km.
+
+## The data
+
+We will use satellite tracking data for Loggerhead Sea Turtles (*Caretta caretta*) provided in [Strydom (2022)](https://doi.org/10.15468/k4s6ap). 
+
+:::{.callout-caution appearance="simple"}
+This dataset is a summarized representation of the tracking locations per 1-degree cell. This implies a coordinate uncertainty of roughly 110 km. This level of uncertainty renders the data virtually useless for any practical application, though the data will suffice for the purposes of this tutorial. Records which are landbased as a result of the uncertainty have been removed and from here on in we will just pretend that the coordinates are accurate.
+:::
+
+```{r}
+#| fig-cap: Loggerhead Sea Turtle satellite tracking records (December 2021 - April 2022)
+
+# Read in data
+loggerhead_data <- read_csv("data/Loggerhead_Sea_Turtle_satellite_tracking_detections__Strydom_2022_DOI10-15468-k4s6ap.csv") |> 
+  clean_names() |> # clean up variable names
+  mutate( # rename variables for easier use
+    record_id = gbif_id,
+    latitude = decimal_latitude, 
+    longitude = decimal_longitude, 
+    date_time = event_date
+  )
+
+# Remove land based records (as a result of coordinate uncertainty)
+land_based_records <- c(4022992331, 4022992326, 4022992312, 4022992315, 4022992322, 4022992306)
+loggerhead_data <- loggerhead_data |> dplyr::filter(!(record_id %in% land_based_records))
+
+# Select the variables relevant to this tutorial
+loggerhead_data <- loggerhead_data |> 
+  select(longitude, latitude, date_time, record_id, species)
+
+# Create interactive map of the records
+loggerhead_data |> 
+  leaflet() |> 
+  addTiles() |> 
+  addMarkers(label = ~date_time)
+```
+
+
+
+Strydom A. 2022. Wreck Rock Turtle Care - satellite tracking. Data downloaded from [OBIS-SEAMAP](http://seamap.env.duke.edu/dataset/2178); originated from [Satellite Tracking and Analysis Tool (STAT)](http://www.seaturtle.org/tracking/index.shtml?project_id=1381). [DOI: 10.15468/k4s6ap](https://doi.org/10.15468/k4s6ap) accessed via [GBIF.org](https://www.gbif.org/) on 2023-02-17.

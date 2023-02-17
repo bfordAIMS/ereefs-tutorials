@@ -202,7 +202,7 @@ temps_raster
 In the code chunk above we use a [pipe](https://r4ds.hadley.nz/workflow-pipes.html) `|>`. Pipes are very useful when passing a dataset through a sequence of functions. In the code above we take our extracted temps, transpose them, turn them into a raster, and then flip the raster. The final result is saved to `temps_raster`.
 :::
 
-Now we have our temperature data as a raster and in the correct orientation, producing a (very basic) plot is easy.
+Now we have our temperature data as a raster (in the correct orientation), producing a simple plot is easy.
 
 ```{r}
 plot(temps_raster)

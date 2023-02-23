@@ -1,0 +1,212 @@
+---
+title: "Accessing eReefs data from the AIMS server"
+subtitle: "Basic access with OPeNDAP {{< fa brands r-project >}}"
+---
+
+
+In this tutorial we will look at how to access eReefs data directly from the [AIMS THREDDS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html) in R. This server hosts aggregated eReefs model data in netCDF file format and offers access to the data files via OPeNDAP, HTTP Server, and Web Map Service (WMS). While we could download the data files manually via the HTTPServer link, this becomes cumbersome when downloading multiple files, given their large size. Thankfully, OPeNDAP provides a way to access the data files over the internet and extract only the data we want. 
+
+For example, say we want the daily mean surface temperature at a single location for the last 30 days. If we were to download the 30 individual daily aggregated netCDF files, with each file ~ 350 Mb, this would require us to download over 10 Gb of data just to get 300 numbers. The vast majority of this data would be irrelevant to our needs as the netCDF files contain data for a range of variables, at a range of depths, for many, many locations. However, with OPeNDAP, we can extract the daily mean values directly from the server without downloading any superfluous data.
+
+
+## Navigating the eReefs server
+
+*ADD: Info about the folder and file naming on the AIMS THREDDS Server.*
+
+
+## R packages
+
+```{r loadPackages, message=FALSE, warning=FALSE}
+library(RNetCDF) # working with netcdf files (incl. via OPeNDAP)
+library(raster) # creating and manipuling rasters
+library(rgdal) # package for geospatial analysis
+```
+
+:::{.callout-note appearance="simple"}
+While the `ncdf4` package is commonly used to work with NetCDF files in R, it does not offer compatibility with OPeNDAP for Windows (only Mac and Linux). For this reason we will use the `RNetCDF` package which offers similar functionality and Windows compatibility with OPeNDAP. Note that if you are using Mac or Linux and wish to use `ncdf4`, the functions used herein have obvious analogues; for example `ncdf4::nc_open()` vs. `RNetCDF::open.nc()`.
+:::
+
+
+## Basic server access
+
+In this example we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth  across the entire scope of the eReefs model. We will then produce a very basic plot of the data.
+
+### Connect to a file on the server
+
+First we need to find the right NetCDF file on the server. The available eReefs data NetCDF files are listed in the [AIMS THREDDS Server catalogue](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will navigate to the eReefs 4 km Hydrodynamic Model daily aggregated data for the month of December 2022 and copy the OPeNDAP data URL.
+
+![](images/server_navigation.gif)
+
+```{r}
+#| code-overflow: wrap
+input_file <- "https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2022-12.nc"
+```
+
+We can then open a connection to this file using the `RNetCDF::open.nc` function.
+
+```{r}
+dailyAggDec22.nc <- open.nc(input_file)
+```
+
+::: {.callout-note appearance="simple"}
+If you wish to download NetCDF files from the server you can click the HTTPServer link instead of OPeNDAP. The file can then be loaded into R by specifying the path: `open.nc("<path to downloaded file>")`.
+:::
+
+### Print a summary of the file
+
+If we do not know what variables or dimensions are available in the file we have connected to, we can print a summary.
+
+```{r eval=FALSE}
+summary <- print.nc(dailyAggDec22.nc)
+```
+
+<details><summary><code>summary</code></summary>
+
+```{r echo=FALSE}
+print.nc(dailyAggDec22.nc)
+```
+</details>
+
+
+### Extract data from the server
+
+Now that we have an open connection to a file on the server we need to extract the daily mean temperature at 1.5m depth for the 10th of December. 
+
+From the summary output above we can see that the variable corresponding to temperature is: $\texttt{ temp(longitude, latitude, k, time)}$.
+
+The dimensions for temperature are in brackets. This means that there is a temperature value for every combination of longitude, latitude, depth (k) and time. We can now see why these NetCDF files are so large.
+
+To extract the data we will use the function
+
+`RNetCDF::var.get.nc(ncfile, variable, start=NA, count=NA, ...)`
+
+We need to give the function:
+
+  * `ncfile`: a NetCDF file connection; in our case `dailyAggDec22.nc`.
+  * `variable`: the name or id of the data variable we wish to extract; in our case `"temp"`.
+  * `start`: a vector of indices of where to start getting data, one for each dimension of the variable. Since we have $\texttt{temp(longitude, latitude, k, time)}$  we need to tell the function where to start getting data along each of the four dimensions.
+  * `count`: similar to start, but specifying the number of temperature values to extract along each dimension. 
+
+Let's look at how to construct our `start` and `count` vectors.
+
+:::{.callout-note appearance="simple"}
+The default values of `start` and `count` are `NA`, in which case all data for the given `variable` will be extracted.
+:::
+
+**Depth**: Starting with depth is easy because we have a constant value of interest (1.5 m). The index `k` corresponds to different depths as shown in the table below, where we see `k=16` maps to a depth of 1.5 m.
+
+<details><summary>Table of eReefs depths corresponding to index `k`</summary>
+
+| Index (k) | Hydrodynamic 1km model | Hydrodynamic & BioGeoChemical 4km models  |
+| --------- | ---------------------- | ----------------------------------------- |
+| 1         | -140.00 m              | -145.00 m                                 |
+| 2         | -120.00 m              | -120.00 m                                 |
+| 3         | -103.00 m              | -103.00 m                                 |
+| 4         | -88.00 m               | -88.00 m                                  |
+| 5         | -73.00 m               | -73.00 m                                  |
+| 6         | -60.00 m               | -60.00 m                                  |
+| 7         | -49.00 m               | -49.00 m                                  |
+| 8         | -39.50 m               | -39.50 m                                  |
+| 9         | -31.00 m               | -31.00 m                                  |
+| 10        | -24.00 m               | -23.75 m                                  |
+| 11        | -18.00 m               | -17.75 m                                  |
+| 12        | -13.00 m               | -12.75 m                                  |
+| 13        | -9.00 m                | -8.80 m                                   |
+| 14        | -5.25 m                | -5.55 m                                   |
+| 15        | -2.35 m                | -3.00 m                                   |
+| 16        | -0.50 m                | -1.50 m                                   |
+| 17        | n/a                    | -0.50 m                                   |
+
+</details>
+
+
+**Time**: Since we have the daily aggregated data for December 2022, and are interested only in a single day (the 10th), `time` is also a constant value. From the summary output we can see we have 31 time indexs, these correspond to the day of the month, therefore we want `time=10`.
+
+**Longitude and latitude**: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want to start at index 1 and count for the entire length of latitude and longitude. To get the lengths we could note the values from the summary output, where we see $\texttt{longitude = 491}$ and $\texttt{latitude = 723}$. However we could also get the lengths programatically. 
+
+```{r}
+lon <- var.get.nc(dailyAggDec22.nc, "longitude")
+lat <- var.get.nc(dailyAggDec22.nc, "latitude")
+data.frame(length(lon), length(lat))
+```
+
+:::{.callout-note appearance="simple"}
+Within the eReefs netCDF files, the dimensions $\texttt{longitude, latitude, k, time}$ have corresponding variables `longitude`, `latitude`, `zc`, `time` (see summary output). Note that we would extract the dimension $\texttt{k}$ variable with `var.get.nc(..., variable = "zc")`.
+:::
+
+
+Now we are ready to construct our `start` and `count` vectors and extract the data. 
+
+```{r}
+# SETUP START AND COUNT VECTORS
+# Recall the order of the dimensions: (lon, lat, k , time)
+# We start at lon=1, lat=1, k=16, time=10 and get temps for
+# every lon and lat while holding depth and time constant
+
+lon_st <- 1
+lat_st <- 1
+depth_st <- 16  # index k = 16 --> depth = 1.5 m
+time_st <- 10   # index time = 10 --> 10th day of month
+
+lon_ct <- length(lon) # get temps for all lons and lats
+lat_ct <- length(lat)
+time_ct <- 1  # Hold time and depth constant
+depth_ct <- 1
+
+start_vector <- c(lon_st, lat_st, depth_st, time_st)  
+count_vector <- c(lon_ct, lat_ct, time_ct, depth_ct)
+
+# EXTRACT DATA
+temps_10Dec22_1p5m <- var.get.nc(
+  ncfile = dailyAggDec22.nc, 
+  variable = "temp",
+  start = start_vector, 
+  count = count_vector
+)
+
+# Get the size of our extracted data
+dims <- dim(temps_10Dec22_1p5m)
+data.frame(nrows = dims[1], ncols = dims[2])
+```
+
+
+### Close connection to file
+
+Now that our extracted data is stored in memory, we should close the connection to the NetCDF file on the server.
+
+```{r}
+close.nc(dailyAggDec22.nc)
+```
+
+
+### Plot the data
+
+Save the data in a raster. We also need to transpose and flip to orient the data correctly.
+
+*ADD*: why do we need to flip and transpose? Explain CRS (same for all ereefs netcdfs?)
+
+```{r}
+temps_raster <- temps_10Dec22_1p5m |>
+  t() |>   # transpose temps
+  raster(  # create raster
+    xmn = min(lon), xmx = max(lon), 
+    ymn = min(lat), ymx = max(lat), 
+    crs = CRS("+init=epsg:4326")
+  ) |>
+  flip(direction = 'y') # flip the raster
+
+temps_raster
+```
+
+
+:::{.callout-note appearance="simple"}
+In the code chunk above we use a [pipe](https://r4ds.hadley.nz/workflow-pipes.html) `|>`. Pipes are very useful when passing a dataset through a sequence of functions. In the code above we take our extracted temps, transpose them, turn them into a raster, and then flip the raster. The final result is saved to `temps_raster`.
+:::
+
+Now we have our temperature data as a raster (in the correct orientation), producing a simple plot is easy.
+
+```{r}
+plot(temps_raster)
+```
+
+

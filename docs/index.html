@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.2.335">
+<meta name="generator" content="quarto-1.3.217">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>AIMS eReefs tutorials</title>
+<title>eReefs tutorials</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -76,23 +76,24 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/logo.png" alt="" class="navbar-logo">
+    <img src="./images/ereefs_aims_logo.png" alt="" class="navbar-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">AIMS eReefs tutorials</span>
+    <span class="navbar-title">eReefs tutorials</span>
     </a>
   </div>
+            <div id="quarto-search" class="" title="Search"></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./tutorials/r/r_tutorials_homepage.html">
+    <a class="nav-link" href="./tutorials/r/r_tutorials_homepage.html" rel="" target="">
  <span class="menu-text"><i class="fa-brands fa-r-project" aria-label="r-project"></i></span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./tutorials/python/python_tutorials_homepage.html">
+    <a class="nav-link" href="./tutorials/python/python_tutorials_homepage.html" rel="" target="">
  <span class="menu-text"><i class="fa-brands fa-python" aria-label="python"></i> Python</span></a>
   </li>  
 </ul>
@@ -100,15 +101,14 @@ ul.task-list li input[type="checkbox"] {
   <li class="dropdown-header">
  <span class="menu-text">   </span></li>
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/bfordAIMS/ereefs-tutorials"><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/bfordAIMS/ereefs-tutorials" rel="" target=""><i class="bi bi-github" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
-              <div class="quarto-toggle-container">
-                  <a href="" class="quarto-color-scheme-toggle nav-link" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
-              </div>
-              <div id="quarto-search" class="" title="Search"></div>
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
@@ -123,32 +123,60 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<table class="table">
-<thead>
-<tr class="header">
-<th>Tutorial</th>
-<th>Languages</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Plotting time series data</td>
-<td><a href="tutorials/r/time-series-plot-r/time_series_plot_r.html"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a>   <a href="tutorials/python/basic-time-series-plot-python/basic_time_series_plot_python.html"><i class="fa-brands fa-python" aria-label="python"></i> Python</a></td>
-</tr>
-<tr class="even">
-<td>Accessing eReefs data from the AIMS server</td>
-<td><a href="tutorials/r/server-data-access-r/server_data_access_r.html"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a>   <a href="tutorials/python/server-data-access-python/server_data_access_python.html"><i class="fa-brands fa-python" aria-label="python"></i> Python</a></td>
-</tr>
-<tr class="odd">
-<td>Processing eReefs data</td>
-<td><a href="tutorials/python/processing-data-python/processing_data_python.html"><i class="fa-brands fa-python" aria-label="python"></i> Python</a></td>
-</tr>
-<tr class="even">
-<td>eReefs data for marine animal tracks</td>
-<td><a href="tutorials/r/animal-tracking-data-r/animal_tracking_data_r.html"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></td>
-</tr>
-</tbody>
-</table>
+<div class="columns">
+<div class="column" style="width:32%;">
+<div class="callout callout-style-default callout-warning no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Access eReefs data from the AIMS server
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Basic access with OPeNDAP</strong> <br> <a href="./tutorials/r/access-ereefs-data-server/basic-server-access/basic_server_access_r.html"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a>   <a href="./tutorials/python/access-ereefs-data-server/basic-server-access/server_data_access_python.html"><i class="fa-brands fa-python" aria-label="python"></i> Python</a></p>
+<p><strong>Programmatic access for multiple dates and points</strong> <br> <a href="./tutorials/r/access-ereefs-data-server/programmatic-server-access/programmatic_server_access_r.html"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a></p>
+</div>
+</div>
+</div><div class="column" style="width:2%;">
+
+</div><div class="column" style="width:32%;">
+<div class="callout callout-style-default callout-warning no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Plot eReefs data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Time series plots</strong> <br> <a href="./tutorials/r/plot-ereefs-data/time-series-plot-r/time_series_plot_r.html"><i class="fa-brands fa-r-project" aria-label="r-project"></i> R</a>   <a href="./tutorials/python/plot-ereefs-data/time-series-plot-python/time_series_plot_python.html"><i class="fa-brands fa-python" aria-label="python"></i> Python</a></p>
+</div>
+</div>
+</div><div class="column" style="width:2%;">
+
+</div><div class="column" style="width:32%;">
+<div class="callout callout-style-default callout-warning no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Process eReefs data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Basic processing</strong> <br> <a href="./tutorials/python/process-ereefs-data/processing_data_python.html"><i class="fa-brands fa-python" aria-label="python"></i> Python</a></p>
+</div>
+</div>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:48%;">
+
+</div>
+</div>
 
 
 
@@ -362,6 +390,92 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {

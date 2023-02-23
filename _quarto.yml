@@ -4,10 +4,10 @@ project:
 
 website:
   favicon: images/logo.png
-  title: "AIMS eReefs tutorials"
+  title: "eReefs tutorials"
   navbar: 
-    background: "#4a85b4"
-    logo: images/logo.png
+    background: "#ffffff"
+    logo: images/ereefs_aims_logo.png
     left: 
       - href: tutorials/r/r_tutorials_homepage.qmd
         text: "{{< fa brands r-project >}}"
@@ -32,6 +32,4 @@ format:
 execute:
   freeze: auto
   code-fold: true
-
-
 

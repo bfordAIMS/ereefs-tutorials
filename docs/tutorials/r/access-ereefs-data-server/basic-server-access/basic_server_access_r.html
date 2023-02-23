@@ -158,7 +158,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../../../tutorials/python/python_tutorials_homepage.html" rel="" target="">
- <span class="menu-text"><i class="fa-brands fa-python" aria-label="python"></i> Python</span></a>
+ <span class="menu-text"><i class="fa-brands fa-python" aria-label="python"></i> python</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -186,16 +186,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#navigating-the-ereefs-server" id="toc-navigating-the-ereefs-server" class="nav-link active" data-scroll-target="#navigating-the-ereefs-server">Navigating the eReefs server</a></li>
+  <li><a href="#motivating-problem" id="toc-motivating-problem" class="nav-link active" data-scroll-target="#motivating-problem">Motivating problem</a></li>
+  <li><a href="#navigating-the-ereefs-server" id="toc-navigating-the-ereefs-server" class="nav-link" data-scroll-target="#navigating-the-ereefs-server">Navigating the eReefs server</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R packages</a></li>
-  <li><a href="#basic-server-access" id="toc-basic-server-access" class="nav-link" data-scroll-target="#basic-server-access">Basic server access</a>
-  <ul class="collapse">
   <li><a href="#connect-to-a-file-on-the-server" id="toc-connect-to-a-file-on-the-server" class="nav-link" data-scroll-target="#connect-to-a-file-on-the-server">Connect to a file on the server</a></li>
-  <li><a href="#print-a-summary-of-the-file" id="toc-print-a-summary-of-the-file" class="nav-link" data-scroll-target="#print-a-summary-of-the-file">Print a summary of the file</a></li>
-  <li><a href="#extract-data-from-the-server" id="toc-extract-data-from-the-server" class="nav-link" data-scroll-target="#extract-data-from-the-server">Extract data from the server</a></li>
-  <li><a href="#close-connection-to-file" id="toc-close-connection-to-file" class="nav-link" data-scroll-target="#close-connection-to-file">Close connection to file</a></li>
-  <li><a href="#plot-the-data" id="toc-plot-the-data" class="nav-link" data-scroll-target="#plot-the-data">Plot the data</a></li>
-  </ul></li>
+  <li><a href="#print-a-file-summary" id="toc-print-a-file-summary" class="nav-link" data-scroll-target="#print-a-file-summary">Print a file summary</a></li>
+  <li><a href="#extract-data" id="toc-extract-data" class="nav-link" data-scroll-target="#extract-data">Extract data</a></li>
+  <li><a href="#close-file-connection" id="toc-close-file-connection" class="nav-link" data-scroll-target="#close-file-connection">Close file connection</a></li>
+  <li><a href="#save-the-data" id="toc-save-the-data" class="nav-link" data-scroll-target="#save-the-data">Save the data</a></li>
   </ul>
 </nav>
     </div>
@@ -220,8 +218,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p>In this tutorial we will look at how to access eReefs data directly from the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS THREDDS server</a> in R. This server hosts aggregated eReefs model data in netCDF file format and offers access to the data files via OPeNDAP, HTTP Server, and Web Map Service (WMS). While we could download the data files manually via the HTTPServer link, this becomes cumbersome when downloading multiple files, given their large size. Thankfully, OPeNDAP provides a way to access the data files over the internet and extract only the data we want.</p>
+<p>In this tutorial we will look at how to access eReefs data directly from the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS THREDDS server</a> in R.</p>
+<p>This server hosts aggregated eReefs model data in netCDF file format and offers access to the data files via OPeNDAP, HTTP Server, and Web Map Service (WMS). While we could download the data files manually via the HTTPServer link, this becomes cumbersome when downloading multiple files, given their large size. Thankfully, OPeNDAP provides a way to access the data files over the internet and extract only the data we want.</p>
 <p>For example, say we want the daily mean surface temperature at a single location for the last 30 days. If we were to download the 30 individual daily aggregated netCDF files, with each file ~ 350 Mb, this would require us to download over 10 Gb of data just to get 300 numbers. The vast majority of this data would be irrelevant to our needs as the netCDF files contain data for a range of variables, at a range of depths, for many, many locations. However, with OPeNDAP, we can extract the daily mean values directly from the server without downloading any superfluous data.</p>
+<section id="motivating-problem" class="level2">
+<h2 class="anchored" data-anchor-id="motivating-problem">Motivating problem</h2>
+<p>In this tutorial we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth across the entire scope of the eReefs model. We will then produce a very basic plot of the data.</p>
+<p>This example will introduce the basics of how to connect to files on the server and extract the data we want.</p>
+</section>
 <section id="navigating-the-ereefs-server" class="level2">
 <h2 class="anchored" data-anchor-id="navigating-the-ereefs-server">Navigating the eReefs server</h2>
 <p><em>ADD: Info about the folder and file naming on the AIMS THREDDS Server.</em></p>
@@ -244,11 +248,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="basic-server-access" class="level2">
-<h2 class="anchored" data-anchor-id="basic-server-access">Basic server access</h2>
-<p>In this example we will extract the daily mean water temperature for the 10th of December 2022 at 1.5 m depth across the entire scope of the eReefs model. We will then produce a very basic plot of the data.</p>
-<section id="connect-to-a-file-on-the-server" class="level3">
-<h3 class="anchored" data-anchor-id="connect-to-a-file-on-the-server">Connect to a file on the server</h3>
+<section id="connect-to-a-file-on-the-server" class="level2">
+<h2 class="anchored" data-anchor-id="connect-to-a-file-on-the-server">Connect to a file on the server</h2>
 <p>First we need to find the right NetCDF file on the server. The available eReefs data NetCDF files are listed in the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS THREDDS Server catalogue</a>. We will navigate to the eReefs 4 km Hydrodynamic Model daily aggregated data for the month of December 2022 and copy the OPeNDAP data URL.</p>
 <p><img src="images/server_navigation.gif" class="img-fluid"></p>
 <div class="cell">
@@ -269,8 +270,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="print-a-summary-of-the-file" class="level3">
-<h3 class="anchored" data-anchor-id="print-a-summary-of-the-file">Print a summary of the file</h3>
+<section id="print-a-file-summary" class="level2">
+<h2 class="anchored" data-anchor-id="print-a-file-summary">Print a file summary</h2>
 <p>If we do not know what variables or dimensions are available in the file we have connected to, we can print a summary.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>summary <span class="ot">&lt;-</span> <span class="fu">print.nc</span>(dailyAggDec22.nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -437,8 +438,8 @@ variables:
 </div>
 </details>
 </section>
-<section id="extract-data-from-the-server" class="level3">
-<h3 class="anchored" data-anchor-id="extract-data-from-the-server">Extract data from the server</h3>
+<section id="extract-data" class="level2">
+<h2 class="anchored" data-anchor-id="extract-data">Extract data</h2>
 <p>Now that we have an open connection to a file on the server we need to extract the daily mean temperature at 1.5m depth for the 10th of December.</p>
 <p>From the summary output above we can see that the variable corresponding to temperature is: <span class="math inline">\(\texttt{ temp(longitude, latitude, k, time)}\)</span>.</p>
 <p>The dimensions for temperature are in brackets. This means that there is a temperature value for every combination of longitude, latitude, depth (k) and time. We can now see why these NetCDF files are so large.</p>
@@ -627,20 +628,20 @@ Table of eReefs depths corresponding to index <code>k</code>
 </div>
 </div>
 </section>
-<section id="close-connection-to-file" class="level3">
-<h3 class="anchored" data-anchor-id="close-connection-to-file">Close connection to file</h3>
+<section id="close-file-connection" class="level2">
+<h2 class="anchored" data-anchor-id="close-file-connection">Close file connection</h2>
 <p>Now that our extracted data is stored in memory, we should close the connection to the NetCDF file on the server.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">close.nc</span>(dailyAggDec22.nc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="plot-the-data" class="level3">
-<h3 class="anchored" data-anchor-id="plot-the-data">Plot the data</h3>
-<p>Save the data in a raster. We also need to transpose and flip to orient the data correctly.</p>
-<p><em>ADD</em>: why do we need to flip and transpose? Explain CRS (same for all ereefs netcdfs?)</p>
+<section id="save-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="save-the-data">Save the data</h2>
+<p>Now that we have our extracted data we may wish to save it for future use. To do this we first convert the data from its current form as a matrix array into a raster, and then save the raster as a netCDF file (GeoTIFF and other formats are also possible).</p>
+<p>When converting extracted eReefs data to rasters we need to apply the transpose <code>t()</code> and <code>flip()</code> functions in order to get the correct orientation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>temps_raster <span class="ot">&lt;-</span> temps_10Dec22_1p5m <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">|&gt;</span>   <span class="co"># transpose temps</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">|&gt;</span>   <span class="co"># transpose temps matrix</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">raster</span>(  <span class="co"># create raster</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">xmn =</span> <span class="fu">min</span>(lon), <span class="at">xmx =</span> <span class="fu">max</span>(lon), </span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ymn =</span> <span class="fu">min</span>(lat), <span class="at">ymx =</span> <span class="fu">max</span>(lat), </span>
@@ -666,20 +667,63 @@ values     : 22.08588, 32.48817  (min, max)</code></pre>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>In the code chunk above we use a <a href="https://r4ds.hadley.nz/workflow-pipes.html">pipe</a> <code>|&gt;</code>. Pipes are very useful when passing a dataset through a sequence of functions. In the code above we take our extracted temps, transpose them, turn them into a raster, and then flip the raster. The final result is saved to <code>temps_raster</code>.</p>
+<p>In the code chunk above we used <a href="https://r4ds.hadley.nz/workflow-pipes.html">pipes</a> <code>|&gt;</code>. Pipes are very useful when passing a dataset through a sequence of functions. In the code above we take our extracted temps, transpose them, turn them into a raster, and then flip the raster. The final result is saved to <code>temps_raster</code>.</p>
 </div>
 </div>
 </div>
-<p>Now we have our temperature data as a raster (in the correct orientation), producing a simple plot is easy.</p>
+<p>Now we have our raster (in the correct orientation), saving it is easy.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The <code>raster</code> package uses the <code>ncdf4</code> package to deal with netCDF files. You can install this package by running <code>install.packages("ncdf4")</code> from an R console.</p>
+</div>
+</div>
+</div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(temps_raster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the raster file in the /data subdirectory</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Note the '.nc' file extension since we are going to save as netCDF</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>save_file <span class="ot">&lt;-</span> <span class="st">"data/ereefsDailyMeanWaterTemperature_10Dec2022_Depth1p5m.nc"</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">writeRaster</span>(</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> temps_raster, <span class="co"># what to save</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> save_file, <span class="co"># where to save it</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"CDF"</span>, <span class="co"># what format to save it as</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">overwrite =</span> <span class="cn">TRUE</span> <span class="co"># whether to replace any existing file with the same name</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>class      : RasterLayer 
+dimensions : 723, 491, 354993  (nrow, ncol, ncell)
+resolution : 0.0299389, 0.02995851  (x, y)
+extent     : 142.1688, 156.8688, -28.69602, -7.036022  (xmin, xmax, ymin, ymax)
+crs        : +proj=longlat +datum=WGS84 +no_defs 
+source     : ereefsDailyMeanWaterTemperature_10Dec2022_Depth1p5m.nc 
+names      : layer 
+values     : 22.08588, 32.48817  (min, max)
+zvar       : layer </code></pre>
+</div>
+</div>
+<p>To prove to ourselves that this worked, lets read the file back in and plot it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read back in the saved netCDF file as a raster</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>temps <span class="ot">&lt;-</span> <span class="fu">raster</span>(save_file)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the data</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(temps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="basic_server_access_r_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<div id="fig-temps-plot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="basic_server_access_r_files/figure-html/fig-temps-plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure&nbsp;1: Extracted eReefs daily aggregated mean temperature at 1.5m depth for 10 December 2022.</figcaption><p></p>
+</figure>
 </div>
 </div>
+</div>
+<p>Hooray! We can now see our saved data plotted in <a href="#fig-temps-plot">Figure&nbsp;1</a>.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

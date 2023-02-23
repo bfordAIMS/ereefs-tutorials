@@ -97,5 +97,11 @@
   },
   "tutorials/r/plot-ereefs-data/time-series-plot-r/time_series_plot_r.qmd": {
     "time_series_plot_r.html": "f47cf46c"
+  },
+  "tutorials/r/plot-ereefs-data/map-plot/map_plot_r.qmd": {
+    "map_plot_r.html": "416cb227"
+  },
+  "tutorials/r/plot-ereefs-data/time-series-plot/time_series_plot_r.qmd": {
+    "time_series_plot_r.html": "1b049522"
   }
 }

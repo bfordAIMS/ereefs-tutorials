@@ -12,7 +12,7 @@ website:
       - href: tutorials/r/r_tutorials_homepage.qmd
         text: "{{< fa brands r-project >}}"
       - href: tutorials/python/python_tutorials_homepage.qmd
-        text: "{{< fa brands python >}} Python"
+        text: "{{< fa brands python >}} python"
 
     right:
       - text: "   "

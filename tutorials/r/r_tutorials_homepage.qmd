@@ -1,1 +1,0 @@
-This is the sub-home page for the `R` tutorials. 

@@ -2,7 +2,7 @@
 .title {
   margin-top: 1% !important;
   text-align: left;
-  font-size: 2em;
+  font-size: 1.6em;
   font-weight: bold;
   background-image: url("images/title_csiro.jpg");
   border-radius: 10px;
@@ -15,8 +15,13 @@
 .subtitle {
   font-weight: bold;
   font-size: 1.8em;
-  margin-top: 3% !important;
+  margin-top: 2% !important;
   margin-bottom: 3% !important;
+}
+.caption {
+  margin-top: -4%;
+  margin-bottom: 5%;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 h1 {
   margin-top: 0px;

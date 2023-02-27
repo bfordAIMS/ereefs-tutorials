@@ -1,6 +1,11 @@
 ---
-title: Time series plots {{< fa brands python >}} Python
+title: "Plotting eReefs data"
+subtitle: "Times series plots {{< fa brands python >}}"
 ---
+
+:::{.tutorial-description}
+Learn how to create time series plots of eReefs data in {{< fa brands python >}} python.
+:::
 
 In this notebook we use OpeNDAP to extract time series data at a single location of interest, then plot this data. This extraction process can also be done with the [AIMS eReefs data extraction tool](https://extraction.ereefs.aims.gov.au/). If you which to perform bigger extractions then we recommend using this tool instead of this process outlined in this example.
 

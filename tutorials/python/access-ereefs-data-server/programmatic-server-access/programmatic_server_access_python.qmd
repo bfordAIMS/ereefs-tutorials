@@ -1,32 +1,27 @@
 ---
 title: "Access eReefs data"
-subtitle: "Programmatic server access {{< fa brands r-project >}}"
+subtitle: "Programmatic server access {{< fa brands python >}}"
 ---
 
 :::{.tutorial-description}
 Learn how to extract eReefs data from the AIMS server for multiple dates and points with OPeNDAP in {{< fa brands r-project >}}.
 :::
 
-
 ```{r chunkOptions, echo=FALSE}
 knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
 :::{.callout-note appearance="simple"}
-This tutorial builds on the techniques introduced in [Access eReefs data: Basic server access {{< fa brands r-project >}}](../basic-server-access/basic_server_access_r.qmd).
+This tutorial builds on the techniques introduced in [Access eReefs data: Basic server access {{< fa brands python >}}](../basic-server-access/basic_server_access_python.qmd).
 :::
 
 In this tutorial we will look at how to get eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html) corresponding to the logged locations of tagged marine animals. Keep in mind, however, that the same methodology can be applied in any situation where we wish to extract eReefs data for a range of points with different dates of interest for each point. 
 
-## R packages
-```{r RPackages}
-library(RNetCDF) # to access server data files via OPeNDAP
-library(readr) # to efficiently read in data
-library(janitor) # to create clean variable names
-library(tidyverse) # for data manipulation and plotting with ggplot2
-library(lubridate) # for working with date and time variables 
-library(leaflet) # to create an interactive map of the tracking locations
-library(knitr); library(kableExtra) # for better table printing
+## Python libraries
+```{python pythonLibraries}
+import csv # to read comma separated values (.csv) files
+from pyjanitor import clean_names
+from netCDF4 import Dataset
 ```
 
 ## Motivating problem
@@ -53,12 +48,15 @@ We will use satellite tracking data for Loggerhead Sea Turtles (*Caretta caretta
 This dataset is a summarized representation of the tracking locations per 1-degree cell. This implies a coordinate uncertainty of roughly 110 km. This level of uncertainty renders the data virtually useless for most practical applications, though it will suffice for the purposes of this tutorial. Records which are landbased as a result of the uncertainty have been removed and from here on in we will just pretend that the coordinates are accurate.
 :::
 
-```{r dataImportMap}
+```{python dataImportMap}
 #| fig-cap: Loggerhead Sea Turtle satellite tracking records (December 2021 - April 2022)
 #| label: fig-data-map
 
 # Read in data
-loggerhead_data <- read_csv("data/Loggerhead_Sea_Turtle_satellite_tracking_detections__Strydom_2022_DOI10-15468-k4s6ap.csv") |> 
+loggerhead_data = csv.reader("data/Loggerhead_Sea_Turtle_satellite_tracking_detections__Strydom_2022_DOI10-15468-k4s6ap.csv")
+
+
+
   clean_names() |> # clean up variable names
   rename( # rename variables for easier use
     record_id = gbif_id,

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>eReefs tutorials - Time series plots  Python</title>
+<title>eReefs tutorials - Plotting eReefs data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -196,7 +196,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Time series plots <i class="fa-brands fa-python" aria-label="python"></i> Python</h1>
+<h1 class="title">Plotting eReefs data</h1>
+<p class="subtitle lead">Times series plots <i class="fa-brands fa-python" aria-label="python"></i></p>
 </div>
 
 
@@ -211,6 +212,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
+<div class="tutorial-description">
+<p>Learn how to create time series plots of eReefs data in <i class="fa-brands fa-python" aria-label="python"></i> python.</p>
+</div>
 <p>In this notebook we use OpeNDAP to extract time series data at a single location of interest, then plot this data. This extraction process can also be done with the <a href="https://extraction.ereefs.aims.gov.au/">AIMS eReefs data extraction tool</a>. If you which to perform bigger extractions then we recommend using this tool instead of this process outlined in this example.</p>
 <blockquote class="blockquote">
 <p><em>Note</em>: This script has no error checking and so changing the date ranges or locations might result in out of bounds errors.</p>
@@ -550,7 +554,7 @@ Grid size is: 491 x 723</code></pre>
 <span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="co">#fig.tight_layout()  # otherwise the right y-label is slightly clipped</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="time_series_plot_python_files/figure-html/cell-11-output-1.png" width="749" height="628"></p>
+<p><img src="DEPRECATED_time_series_plot_python_files/figure-html/cell-11-output-1.png" width="749" height="628"></p>
 </div>
 </div>
 <p>From this graph we can see that the surface water at Davies Reef was very warm during March 2020. There was a strong stratification of the temperature profile with cool water at -18 m. Around the 10th March the wind picked up for a few days, mixing the water, cooling the surface down rapidly.</p>

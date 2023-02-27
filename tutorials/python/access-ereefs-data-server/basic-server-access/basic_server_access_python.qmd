@@ -3,8 +3,8 @@ title: "Accessing eReefs data from the AIMS server"
 subtitle: "Basic access with OPeNDAP {{< fa brands python >}}"
 ---
 
-:::{.caption}
-*An introduction to the basic methods of extracting eReefs data from the AIMS server with OPeNDAP in {{< fa brands python >}} python.*
+:::{.tutorial-description}
+Learn the basics of extracting eReefs data from the AIMS server with OPeNDAP in {{< fa brands python >}} python.
 :::
 
 In this tutorial we will look at how to access eReefs data directly from the [AIMS THREDDS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html) in python. 
@@ -26,7 +26,7 @@ We will extract the daily mean water temperature for the 10th of December 2022 a
 
 ## Python libraries
 
-```{python}
+```{python pythonLibraries}
 from netCDF4 import Dataset, num2date
 import matplotlib.pyplot as plt
 import cartopy
@@ -58,9 +58,9 @@ If you wish to download NetCDF files from the server you can click the HTTPServe
 :::
 
 
-## Investigate file structure
+## Examine file structure
 
-If we wish to investigate the structure of the file we have connected to, including what variables and dimensions are available, we access the various attributes below.
+If we wish to look at the structure of the file we have connected to, including what variables and dimensions are available, we access the various attributes below.
 
 
 <details><summary><code>dailyAggDec22_nc.title</code></summary>
@@ -151,7 +151,7 @@ Let's look at how to construct the vector of dimension indices.
 temps_10Dec22_1p5m = dailyAggDec22_nc.variables['temp'][
   10,  # time index --> 10th day of month
   16,  # depth index k --> 1.5m depth
-  :,   # latitude indices --> shorthand for all possible
+  :,   # latitude indices --> all possible
   :,   # longitude indices --> all possible
 ]
 
@@ -181,7 +181,7 @@ ax.set_extent([135, 165, -6.5, -29.5], ccrs.PlateCarree())
 # Add the data to the plot
 plt.contourf(lons, lats, temps_10Dec22_1p5m, 30, transform=ccrs.PlateCarree())
 
-# Add the Australia coastline
+# Add landmass coastlines shapefile
 ax.coastlines()
 
 # Show plot

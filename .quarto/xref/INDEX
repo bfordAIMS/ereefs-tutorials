@@ -106,5 +106,14 @@
   },
   "tutorials/python/access-ereefs-data-server/basic-server-access/basic_server_access_python.qmd": {
     "basic_server_access_python.html": "3fae08a0"
+  },
+  "tutorials/python/plot-ereefs-data/time-series-plot/time_series_plot_python.qmd": {
+    "time_series_plot_python.html": "625aff50"
+  },
+  "tutorials/python/plot-ereefs-data/time-series-plot/DEPRECATED_time_series_plot_python.qmd": {
+    "DEPRECATED_time_series_plot_python.html": "9ee39b43"
+  },
+  "tutorials/r/follow-along/r_and_r_studio_setup.qmd": {
+    "r_and_r_studio_setup.html": "79b3ef32"
   }
 }

@@ -30,7 +30,7 @@ format:
 **Time series plots** <br> 
 [{{< fa brands r-project >}} R](tutorials/r/plot-ereefs-data/time-series-plot/time_series_plot_r.qmd) 
 &emsp; 
-[{{< fa brands python >}} Python](tutorials/python/plot-ereefs-data/time-series-plot-python/time_series_plot_python.qmd)
+[{{< fa brands python >}} Python](tutorials/python/plot-ereefs-data/time-series-plot/time_series_plot_python.qmd)
 
 :::
 ::::

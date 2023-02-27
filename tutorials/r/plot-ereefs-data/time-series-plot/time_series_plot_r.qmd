@@ -1,6 +1,12 @@
 ---
-title: "Times Series Plots {{< fa brands r-project >}}"
+title: "Plotting eReefs data"
+subtitle: "Times series plots {{< fa brands r-project >}}"
 ---
+:::{.tutorial-description}
+Learn how to create time series plots of eReefs data in {{< fa brands r-project >}}.
+:::
+
+In this tutorial we use time series plots of eReefs data to examine the seasonal trends in northward currents for a single location off the coast of Cooktown, QLD Australia.
 
 ```{r chunkOptions, echo=FALSE}
 # Set global code chunk options
@@ -12,18 +18,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Topics covered {-}
 
-* Extracting eReefs data using the online data extraction tool
-* Setting up `R` and `RStudio` and importing the eReefs data
-* Interactive `leaflet` maps with reef boundaries
-* Basic time series plots in `ggplot2`
-* Time series plots with data grouped by year in `ggplot2`
-* Interactive plots with `plotly`
-* Exploring two-dimensional relationships with scatter plots in `ggplot2`
-
-
-# Motivating problem
+## Motivating problem
 
 Heat waves occur in the shallow waters of the Great Barrier Reef (GBR) in much the same way that they occur on land. When the waters gets too hot for too long, corals become sick and can eventually die (as a result of coral bleaching). As the Earth continues to warm under a changing climate, these heat waves are becoming hotter, longer, and more frequent, threating the survival of the GBR as we know it. 
 
@@ -33,45 +29,19 @@ However, major ocean currents along the GBR bifurcate, i.e. split, off the coast
 
 We wish to examine this phenomena on a finer scale to get a sense of how strong and persistant this genetic barrier may be.
 
-```{r figCurrents, echo=FALSE}
+```{r figCurrents, echo=FALSE, out.width="100%"}
 #| fig-cap: "eReefs 2016 yearly mean temperatures (left) and currents (right) for the Great Barrier Reef showing north-to-south temperature gradient and current bifurcation north-east of Cairns (shown in red and orange)."
-#| label: fig-currents
+#| label: fig-currents 
+
 knitr::include_graphics("images/gbr4_2016_bifurcation.png")
 ```
 
 
-# Data extraction
+## R Packages
 
-Data was extracted from the [eReefs GBR Hydrological Model (4km) v2.0](https://ereefs.aims.gov.au/ereefs-aims/gbr4/temp-wind-salt-current) using the online [data extraction tool](https://extraction.ereefs.aims.gov.au/extract-data) for a single point approximately 60 km south of Lizard Island (shown in @fig-site). For this point we extracted the daily aggregated data for the northward current at a depth of 0.5 m (as coral larvae generally travel in the top of the water column) and the northward windspeed (to see if the wind may be a key driver of current speed and direction). Both of these variables have the units of meters per second (m/s), where a positive value indicates the speed of the wind to the north, and a negative value, to the south. We extracted all data between 1 September 2010 - 1 September 2022. 
+```{r RPackages}
+#| code-overflow: wrap
 
-This data can be downloaded [here](https://extraction.ereefs.aims.gov.au/data/2211.f8f2a18). **!Replace link after upload (so github tutorial link can be added to data page)!**
-
-
-# R & R Studio setup
-
-1. Download and install `R` (the programming language) and R Studio (the integrated development environment) following the instructions [here](https://posit.co/download/rstudio-desktop/).
-
-2. [Download the git repository for this tutorial](https://github.com/bfordAIMS/ereefs-tutorials/tree/main/tutorials/r/time-series-plot-r), and unzip the folder in a suitable place on your hard drive.
-
-3. Open R Studio and create a new project: File > New Project > Existing Directory > Browse > select the unzipped git tutorial folder created in step 2. 
-
-4. Open the file `tutorial__time_series.Rmd` and run the code chunk below by clicking the `r fontawesome::fa(name="play", fill = "green")` button in the top right corner. Chunks can also be run be pressing ctrl+shift+enter and sections of code (e.g. half a line, a single line, multiple lines) can be run by selecting the section and pressing ctrl+enter (replace ctrl with cmd on Mac). 
-
-```{r installPackages, eval=FALSE}
-# Install the R packages required for this tutorial
-required_packages <- c("readr", "tidyverse", "janitor", "leaflet", "lubridate", "plotly", "fontawesome", "htmltools")
-installed_packages <- installed.packages()[, "Package"] # list of pkgs already installed
-not_yet_installed <- required_packages[!(required_packages %in% installed_packages)]
-if (length(not_yet_installed) > 0) install.packages(not_yet_installed) # install pkgs not yet installed
-```
-
-
-# Importing data
-
-First we need to load in the R packages we will use for this tutorial. 
-
-```{r loadPackages}
-# Load R packages:
 library(readr) # faster data importing
 library(tidyverse) # a suite of packages including dplyr, tidyr, ggplot2, stringr
 library(janitor) # create better variable names
@@ -81,25 +51,29 @@ library(plotly) # making interactive plots
 library(fontawesome) # to put icons in R markdown html
 library(htmltools) # for styling interactive outputs
 
-# Load our custom function to create time series ggplots with data grouped by year 
-# (or a given period <= 12 years) 
-source("ggTS_byYear.R") # we will go through this function later in the tutorial
+# Load our custom function to create time series plots with data grouped by year (or a given period <= 12 months). We will go through this function later in the tutorial.
+source("ggTS_byYear.R") 
 ```
 
-The data we have extracted from eReefs is in a CSV file. We will import the data into `R` using the `readr` package's `read_csv` function (which is much faster at reading in large datasets compared to `R`'s base function `read.csv`). We will then apply the `janitor` package's `clean_names` function, which will format the variable names in a way which is much more convenient for use in `R`. 
+
+## The data
+
+Data was extracted from the [eReefs GBR Hydrological Model (4km) v2.0](https://ereefs.aims.gov.au/ereefs-aims/gbr4/temp-wind-salt-current) using the online [data extraction tool](https://extraction.ereefs.aims.gov.au/extract-data) for a single point approximately 60 km south of Lizard Island (shown in @fig-site). For this point we extracted the daily aggregated data for the northward current at a depth of 0.5 m (as coral larvae generally travel in the top of the water column) and the northward windspeed (to see if the wind may be a key driver of current speed and direction). Both of these variables have the units of meters per second (m/s), where a positive value indicates the speed of the current/wind to the north, and a negative value, to the south. We extracted all data between 1 September 2010 - 1 September 2022. 
+
+This data can be downloaded [here](https://extraction.ereefs.aims.gov.au/data/2211.f8f2a18). **!Replace link after upload (so github tutorial link can be added to data page)!**
 
 ```{r loadData}
-# Import data:
-data_raw <- read_csv("data/eReefsData.csv")
-data <- data_raw %>% clean_names()
-data %>% glimpse() # take a 'glimpse' at our data
-# Print the range of dates in our data:
-paste("Date range:", min(data$aggregated_date_time), "to", max(data$aggregated_date_time))
+# Import data with 'clean' variable names and then take a 'glimpse'
+ereefs_data <- read_csv("data/eReefsData.csv") |> clean_names() |> glimpse()
 ```
 
 Here we can see that we have data for the `wspeed_v` (northward wind velocity) and `v` (northward current velocity) for our single site `site_a` with the coordinates (145.46, -15.25). As we have downloaded the daily aggregated data, we get the mean, median, p5 (5th percentile), p95 (95th percentile), lowest and highest values for each day between 1 September 2010 through 31 August 2022.
 
-# Interactive GBR maps
+:::{.callout-note appearance="simple"}
+Above we used the `readr` package’s `read_csv` function which is much faster at reading in large datasets compared to R’s `base` function `read.csv`. We then applied the `janitor` package’s `clean_names` function, which formats the variable names in consistent matter, making it much more convenient for use in R.
+:::
+
+## Interactive GBR maps
 
 Lets have a closer look at the site for which we have extracted the eReefs data by plotting it on an interactive `leaflet` map along with the GBR reef features. The GBR reef features layer is located in the [eAtlas Web Mapping Service (AIMS)](https://eatlas.org.au/data/uuid/71127e4d-9f14-4c57-9845-1dce0b541d8d). A list of other layers available in this server can be found [here](https://maps.eatlas.org.au/maps/web/wicket/bookmarkable/org.geoserver.web.demo.MapPreviewPage).
 
@@ -111,20 +85,20 @@ You can find out more about creating `leaflet` maps in `R` [here](https://rstudi
 
 # Get unique coordinates from data (in this case only one set of lat/lon)
 site_coords <- data.frame(
-  lat = unique(data_raw$Latitude), 
-  lon = unique(data_raw$Longitude)
+  lat = unique(ereefs_data$latitude), 
+  lon = unique(ereefs_data$longitude)
 )
 # Plot coordinates on a leaflet map
-site_map <- site_coords %>% 
+site_map <- site_coords |>  
     leaflet( # create a blank leaflet map
       options = leafletOptions(attributionControl=FALSE) # remove the 'leaflet' watermark
-    ) %>% 
-    addTiles() %>% # adds a basemap (OpenStreetMap by default)
-    addMarkers() %>% # add a marker at the given coordinates
+    ) |>  
+    addTiles() |>  # adds a basemap (OpenStreetMap by default)
+    addMarkers() |>  # add a marker at the given coordinates
     addScaleBar()
 
 # Add the GBR reef features (WMS layer) to the map
-site_map <- site_map %>% 
+site_map <- site_map |>  
     addWMSTiles(
       baseUrl = "https://maps.eatlas.org.au/maps/wms?", # Link to WMS server
       layers = c("ea:GBR_GBRMPA_GBR-features"), # Names of layers (located in the WMS server) to display
@@ -132,13 +106,11 @@ site_map <- site_map %>%
     ) 
                 
 # Display the map centred at our site
-site_map %>% 
+site_map |>  
     setView(lng = site_coords$lon[1], lat = site_coords$lat[1], zoom = 9)
 ```
 
-# Time series plots
-
-## Basic
+## Basic time series plots
 
 Since we are interested in gaining some insight into the possibility of northern coral larvae migrating southward through our site, we should have a look at the north-south current velocity data. 
 
@@ -146,8 +118,8 @@ Since we are interested in gaining some insight into the possibility of northern
 #| fig-cap: "Time series plot of daily mean northward current velocity."
 #| label: fig-ts
 
-data %>% 
-  filter(variable == "v") %>% # select the current variable
+ereefs_data |> 
+  dplyr::filter(variable == "v") |>  # select the current variable
   ggplot(aes(x = aggregated_date_time, y = mean)) + # and plot the daily mean
   geom_line(alpha=0.7) + # specify a line graph of the mean
   geom_abline(slope = 0, intercept = 0, color = "red", linewidth = 1) + # add a line a y=0
@@ -160,7 +132,7 @@ Here we see that there does appear to be a cyclical pattern to the northward cur
 
 However, in order to get a better idea of what is happening, we should have a closer look at the data for the coral spawning period of roughly October - January. 
 
-## Advanced
+## Advanced time series plots
 
 We wish to produce the plot below, looking at all our data in an approximate coral spawning season of October through January, for each of the years in our data.
 
@@ -168,21 +140,23 @@ We wish to produce the plot below, looking at all our data in an approximate cor
 #| fig-cap: "Times series plot of daily mean northward current velocity during October through January for each year 2010-11 to 2021-22."
 #| label: fig-tsOctFeb
 
-data %>% 
-  filter(variable == "v") %>%
+ereefs_data |>  
+  filter(variable == "v") |> 
   ggTS_byYear(aggregated_date_time, mean, start_month=10, end_month=1) + 
   geom_line(linewidth=0.6) + 
   geom_abline(slope = 0, intercept = 0, linewidth = 0.8) + 
   labs(y = "Northward current velocity (m/s)", group="Year")
 ```
 
-The first thing we can note, from this plot, is that it is very cluttered, making it difficult to detect any clear trend in our data. However, before we investigate this further, lets look at how the plot was made. 
+The first thing we can note from this plot is it's very cluttered, making it difficult to detect any clear trend in our data. However, before we investigate this further, lets look at how the plot was made. 
 
 Unfortunately, there does not seem to be any out-of-the-box or intuitive ways to plot a given season (i.e. period less than 12 months) for multiple years in `ggplot`. However, we can hack a solution by writing a function called `ggTS_byYear` which creates a fake date variable where all the data is converted to be in the same year and then plots this fake date along the x-axis and groups the data based on the real date. This function is defined below. 
 
-You can copy and paste this function into your script if you would just like to get to using it straight away. However, it is also heavily commented should you wish to customise it further, troubleshoout an errors you are encountering when using it, or fix any unforeseen bugs which may be present. 
+You can copy and paste this function into your script if you would like start using it straight away. However, it is also heavily commented should you wish to customise issues, or just simply see how it works. 
 
-*Note:* if troubleshooting, consider using `R` function [`browser`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/browser). 
+:::{.callout-note appearance="simple"}
+When defining large functions such as this it is useful to save the function in a seperate script and then import the script into R, e.g. `source('ggTS_byYear.R')`.
+:::
 
 ```{r ggTimeSeriesByYear, eval=FALSE}
 ########################################################################
@@ -206,7 +180,7 @@ You can copy and paste this function into your script if you would just like to 
 ## Warning: not designed for plot periods > 12 months                 ##
 ##                                                                    ##
 ## Function concept: fake year(s) is used to put data for all years   ##
-##                   on same x-axis, where as plot period denotes     ##
+##                   on same x-axis, whereas plot period denotes      ##
 ##                   real year(s)pertaining to the data dates         ##
 ##                                                                    ##
 ## Note: x-axis major breaks are months, if a different period is     ##
@@ -222,13 +196,13 @@ ggTS_byYear <- function(
 ) {
   # SETUP
   require(ggplot2)  # for plotting
-  require(magrittr) # source of the pipe (%>%) function
+  require(magrittr) # source of the pipe  |> ) function
   require(dplyr)    # data manipulation
   require(lubridate) # date handling
   fake_year <- 0001 # fake year used to have all dates over same period (grouped by real year)
   
   # APPEND VARIABLES TO DATA FOR USE IN PLOTTING
-  data = data %>%  
+  data = data |>   
     mutate(
       datetime = as_datetime({{date_col_name}}), # Ensure dates in POSIX format
       year = year(datetime), # Create columns for real year and
@@ -241,12 +215,12 @@ ggTS_byYear <- function(
     plot_months = c(start_month:(end_month+1)) # vector of months to plot (including end_month)
     plot_breaks = make_datetime(fake_year, plot_months) # x-axis major breaks at each month
     # Assign data to plot periods and fake years and filter out data not needed:
-    data <- data %>% 
+    data <- data |>  
       mutate(
         # Plot period is within the real year (e.g. June 2016 - October 2016) 
         plot_period_label = paste(year), # data for all months pertain to respective year
         dummy_date = update(datetime, year = fake_year) # all data plotted over fake year (e.g. 0001)
-      ) %>% 
+      ) |>  
       filter(month >= start_month & month <= end_month)
   }
   
@@ -262,7 +236,7 @@ ggTS_byYear <- function(
     ) 
     # Assign data to plot periods (i.e. based on real dates), create the fake date 
     # (using fake_year and fake_year +1), and filter out data not needed:
-    data <- data %>% 
+    data <- data |>  
       mutate(
         # Plot period crosses two calender years, therefore
         # data for months prior to start_month pertain to preceding plot period
@@ -272,7 +246,7 @@ ggTS_byYear <- function(
         # Dummy dates: months after start_month plotted in fake year (e.g. 0001), months prior plotted in 0002
         dummy_year = ifelse(month >= start_month, fake_year, fake_year + 1), 
         dummy_date = update(datetime, year = dummy_year)
-      ) %>% 
+      ) |>  
       filter(month >= start_month | month <= end_month)
   }
   
@@ -282,7 +256,7 @@ ggTS_byYear <- function(
   break_labels <- month.abb[plot_months]
 
   # CREATE PLOT
-  ts_plot <- data %>% 
+  ts_plot <- data |>  
     ggplot(aes(x = dummy_date, y = {{response_col_name}}, group = plot_period_label, colour = plot_period_label)) + 
     labs(x = "Date", y = "Response",  colour = "Year") + 
     theme_bw() + 
@@ -298,8 +272,8 @@ Now we have our function definition, lets see it in action. Recall that our prev
 #| fig-cap: "Times series plot of daily mean northward current velocity during October for each year 2010 to 2021."
 #| label: fig-tsOct
 
-data %>% 
-  filter(variable == "v") %>%
+ereefs_data |>  
+  filter(variable == "v") |> 
   ggTS_byYear(aggregated_date_time, mean, start_month = 10, end_month = 10) + 
   geom_line(linewidth = 0.7) + 
   geom_abline(slope = 0, intercept = 0, linewidth = 0.8) + 
@@ -308,13 +282,11 @@ data %>%
 
 This is significantly easier to digest. However, there is still a lot going on, and sometimes we may wish to see more than a single month at a time. 
 
-# Interactive plots
+## Interactive time series plots
 
-In `R`, we can create interactive plots with the [`plotly`](https://plotly.com/r/) package. 
+We can create interactive plots with the [`plotly`](https://plotly.com/r/) package, enabling us to view individual years, compare subsets of the years, and zoom in on our data and pan across. As this interactivity is a virtue of the html file format, `plotly` plots have limited application (e.g. cannot be used for reports). However, they do allow us to explore our data very easily and intuitively. 
 
-With a `plotly` interactive plot, we can view individual years, compare subsets of the years, and zoom in on our data and pan across. As this interactivity is a virtue of the html file format, `plotly` plots have limited application (e.g. cannot be used for reports). However, they do allow us to explore our data very easily and intuitively. 
-
-Let's plot our data across an entire year and use the zoom and pan features to explore in more detail. Let's plot the graph from September through August, as this aligns with the dates for the data we have extracted. Note that the years are selectable/deselectable from the plot legend, where we can also double click a year to toggle between all years and just the single year, and that when zooming we drag the cursor to zoom and double click to zoom back out.
+Let's plot our data across an entire year and use the zoom and pan features to explore in more detail. We will plot the graph from September through August, as this aligns with the dates for the data we have extracted.
 
 We will initially show only the years 2015-16 and 2021-22, as this provides a nice instance of high variability in the northward current in different years. 
 
@@ -324,27 +296,27 @@ We will initially show only the years 2015-16 and 2021-22, as this provides a ni
 #| label: fig-plotlySepSep
 
 # Create a ggplot and turn it into a plotly plot
-plotSepSep <- data %>% 
-  filter(variable == "v") %>%
+plotSepSep <- ereefs_data |>  
+  filter(variable == "v") |> 
   ggTS_byYear(aggregated_date_time, mean, start_month=9, end_month=8) +
   geom_line(linewidth = 0.7) + 
   geom_abline(slope = 0, intercept = 0, linewidth = 0.5) + 
   labs(y = "Northward current velocity (m/s)") + 
   theme(legend.position="top")
 
-plotSepSep %>% 
-  ggplotly(tooltip = "none") %>% # don't show any information on hover (alternative: "mean" would show mean current)
+plotSepSep |>  
+  ggplotly(tooltip = "none") |>  # don't show any information on hover (alternative: "mean" would show mean current)
   style(visible = "legendonly", traces = c(1:5, 7:11))  # don't show years 2010-2014 & 2016-2020 initially
 ```
 
-This plot allows us to see what is happening both in individual years and overall, across all the years. 
+This plot allows us to see what is happening both in individual years and across all the years. 
 
-Overall we see the trend that we have seen in @fig-ts where the current is predominantly to the north (positive value), and less variable, in (roughly) April through July with southward currents becoming more frequent and strong in August and peaking in (roughly) September through March.  
+Looking at all years we the trend of current predominantly to the north (positive value) and less variable in (roughly) April through July with southward currents becoming more frequent and strong in August and peaking in (roughly) September through March.  
 
 Zooming in to our approximate coral spawning season of October through January, we can see that there are often periods of predominant southward currents, however when these periods occur is highly variable between years.
 
 
-# Exploring wind & current
+## Exploring wind & current
 
 Since we are interested in the surface current (i.e. we have data for northward current at 0.5 m depth), it seems reasonable to suspect that the wind may be a key driving force behind the current direction and velocity. Let's examine this suspicion with by looking at the relationship between the mean northward wind and current speeds. 
 
@@ -353,10 +325,10 @@ Since we are interested in the surface current (i.e. we have data for northward 
 #| label: fig-windCurrLine
 
 # Create a wide format dataset (seperate columns for mean current and wind)
-meanWindCurr <- data %>% 
-  select(aggregated_date_time, variable, mean) %>% # remove unneeded variables
-  pivot_wider(names_from = variable, values_from = mean) %>% 
-  mutate(year = aggregated_date_time %>% year())
+meanWindCurr <- ereefs_data |>  
+  select(aggregated_date_time, variable, mean) |>  # remove unneeded variables
+  pivot_wider(names_from = variable, values_from = mean) |>  
+  mutate(year = aggregated_date_time |>  year())
 
 # Compute Pearson's correlation coefficient for the northward daily mean current and windspeed
 r = cor.test(meanWindCurr$wspeed_v, meanWindCurr$v, method = "pearson")
@@ -364,7 +336,7 @@ r = cor.test(meanWindCurr$wspeed_v, meanWindCurr$v, method = "pearson")
 # Dual timeseries plot of windspeed and current
 labs <- c("Northward current velocity (m/s)", "Northward wind speed (m/s)")
 names(labs) <- c("v", "wspeed_v") 
-data %>%
+ereefs_data |> 
   ggplot(aes(x = aggregated_date_time, y = mean)) + # and plot the daily mean
   geom_line(alpha=0.7) + # specify a line graph of the mean
   geom_hline(yintercept = 0, color = "red", linewidth = 0.5) + # add a line a y=0
@@ -387,7 +359,7 @@ From this data alone we cannot conclude that wind is a driver of current, as it 
 #| label: fig-windCurrScatter
 
 # Scatter plot of daily mean wind and current
-meanWindCurr %>% 
+meanWindCurr |>  
   ggplot(aes(x = wspeed_v, y = v)) +
   geom_point(alpha = 0.2, size = 2) + 
   geom_hline(yintercept = 0, colour = "grey") + 
@@ -397,7 +369,7 @@ meanWindCurr %>%
 ```
 
 
-# Conclusions & limitations
+## Conclusions & limitations
 
 While it would be nice to draw some conclusions from our analyses about the possibility of northern coral larvae migrating into the southern GBR, the reality is that we can't. Coral larve travel on complex paths and predicting these paths is an active and highly sophisticated area of research (find out more [here](https://www.aims.gov.au/research-topics/monitoring-and-discovery/connectivity); see a real approach to answering this question [here](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6802068/#:~:text=3.1.%20Biophysical%20models)). Unfortunately, this question is just too complicated for any real insights to be gained from data for only a single site. But, at the very least, we did make some nice graphs!
 

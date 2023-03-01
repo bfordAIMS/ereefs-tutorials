@@ -103,27 +103,19 @@ The default values of `start` and `count` are `NA`, in which case all data for t
 
 <details><summary>Table of eReefs depths corresponding to index `k`</summary>
 
-| Index (k) | Hydrodynamic 1km model | Hydrodynamic & BioGeoChemical 4km models  |
-| --------- | ---------------------- | ----------------------------------------- |
-| 1         | -140.00 m              | -145.00 m                                 |
-| 2         | -120.00 m              | -120.00 m                                 |
-| 3         | -103.00 m              | -103.00 m                                 |
-| 4         | -88.00 m               | -88.00 m                                  |
-| 5         | -73.00 m               | -73.00 m                                  |
-| 6         | -60.00 m               | -60.00 m                                  |
-| 7         | -49.00 m               | -49.00 m                                  |
-| 8         | -39.50 m               | -39.50 m                                  |
-| 9         | -31.00 m               | -31.00 m                                  |
-| 10        | -24.00 m               | -23.75 m                                  |
-| 11        | -18.00 m               | -17.75 m                                  |
-| 12        | -13.00 m               | -12.75 m                                  |
-| 13        | -9.00 m                | -8.80 m                                   |
-| 14        | -5.25 m                | -5.55 m                                   |
-| 15        | -2.35 m                | -3.00 m                                   |
-| 16        | -0.50 m                | -1.50 m                                   |
-| 17        | n/a                    | -0.50 m                                   |
+```{r kIndicesToDepthTable, echo=FALSE}
+# Print table of ereefs depths to indices (k)
+tbl_path <- "resources/eReefs_model_depths_by_index_k.csv" |> here::here() |> file.path()
+col_names <- read.csv(tbl_path, header=FALSE)[1,] |> as.vector()
+k_tbl <- read.csv(tbl_path, header = TRUE)
+colnames(k_tbl) <- col_names
+k_tbl |> knitr::kable() |> kableExtra::kable_styling() |> 
+  kableExtra::column_spec(2, color = "grey")
+```
 
 </details>
+
+
 
 
 **Time**: Since we have the daily aggregated data for December 2022, and are interested only in a single day (the 10th), `time` is also a constant value. From the summary output we can see we have 31 time indexs, these correspond to the day of the month, therefore we want `time=10`.

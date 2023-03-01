@@ -4,7 +4,7 @@ subtitle: "Programmatic server access {{< fa brands python >}}"
 ---
 
 :::{.tutorial-description}
-Learn how to extract eReefs data from the AIMS server for multiple dates and points with OPeNDAP in {{< fa brands r-project >}}.
+Learn how to extract eReefs data from the AIMS server for multiple dates and points with OPeNDAP in {{< fa brands python >}} python.
 :::
 
 ```{r chunkOptions, echo=FALSE}
@@ -17,10 +17,14 @@ This tutorial builds on the techniques introduced in [Access eReefs data: Basic 
 
 In this tutorial we will look at how to get eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html) corresponding to the logged locations of tagged marine animals. Keep in mind, however, that the same methodology can be applied in any situation where we wish to extract eReefs data for a range of points with different dates of interest for each point. 
 
-## Python libraries
-```{python pythonLibraries}
-import csv # to read comma separated values (.csv) files
-from pyjanitor import clean_names
+## Python modules
+```{python pythonModules}
+import pandas as pd  # for data analysis
+import numpy as np  # for quik maths
+from janitor import clean_names  # to create consitent, 'clean' variable names
+import folium  # a python API to interactive leaflet maps
+import datetime as dt # to time how long the data export takes
+from IPython.display import HTML # to render, i.e. 'display', html tables
 from netCDF4 import Dataset
 ```
 
@@ -53,37 +57,55 @@ This dataset is a summarized representation of the tracking locations per 1-degr
 #| label: fig-data-map
 
 # Read in data
-loggerhead_data = csv.reader("data/Loggerhead_Sea_Turtle_satellite_tracking_detections__Strydom_2022_DOI10-15468-k4s6ap.csv")
+data = pd.read_csv("data/Loggerhead_Sea_Turtle_satellite_tracking_detections__Strydom_2022_DOI10-15468-k4s6ap.csv")
 
+# Convert columns names from camelCase to snake_case
+data = data.clean_names(case_type = "snake")
 
+# Rename some variables for easier use
+data = data.rename(columns = {
+  "gbif_id": "record_id", 
+  "decimal_latitude": "latitude", 
+  "decimal_longitude": "longitude", 
+  "event_date": "date_time"
+})
 
-  clean_names() |> # clean up variable names
-  rename( # rename variables for easier use
-    record_id = gbif_id,
-    latitude = decimal_latitude, 
-    longitude = decimal_longitude, 
-    date_time = event_date
-  )
+# Ensure date_time is in the datetime data format
+data['date_time'] = pd.to_datetime(data['date_time'])
+
+# Seperate date_time into date and time variables
+data = data.assign(
+  date = data['date_time'].dt.strftime("%Y-%m-%d"), 
+  time = data['date_time'].dt.strftime("%H:%M")
+)
 
 # Remove land based records (as a result of coordinate uncertainty)
-land_based_records <- c(4022992331, 4022992326, 4022992312, 4022992315, 4022992322, 4022992306)
-loggerhead_data <- loggerhead_data |> dplyr::filter(!(record_id %in% land_based_records))
+land_based_records = [4022992331, 4022992326, 4022992312, 4022992315, 4022992322, 4022992306]
+data = data.query("record_id not in @land_based_records")
 
 # Select the variables relevant to this tutorial
-loggerhead_data <- loggerhead_data |> 
-  select(longitude, latitude, date_time, record_id, species)
+select_vars = ["longitude", "latitude", "date", "time", "date_time","record_id", "species"]
+data = data[select_vars]
 
-# View the tracking locations on an interactive map
-loggerhead_data |> 
-  leaflet() |> 
-  addTiles() |> 
-  addMarkers(label = ~date_time)
+# View the tracking locations on an interactive map:
+# Create map centred on the mean coordinates of the tracking locations
+centre_point = [data['latitude'].mean(), data['longitude'].mean()]
+track_map = folium.Map(location = centre_point, zoom_start = 4)
+
+# Add markers to map at each tracking location
+for row in data.itertuples():
+  coords_i = [row.latitude, row.longitude]
+  marker_i = folium.Marker(location = coords_i, popup = row.date_time)
+  marker_i.add_to(track_map);
+# Note: the trailing ';' above supresses the output of the add marker function (which returns a pointer to the marker in memory)
+
+track_map
 ```
 
 
 ## Extracting data from the server
 
-In the preceeding tutorial [Accessing eReefs data from the AIMS server](../server-data-access-r/server_data_access_r.html) we introduced the process of extracting eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will now extend this methodology to extract data for a set of points and dates. 
+In the preceeding tutorial [Accessing eReefs data from the AIMS server](../basic-server-access/basic_server_access_python.qmd) we introduced the process of extracting eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will now extend this methodology to extract data for a set of points and dates. 
 
 In @tbl-detections below we see the set of coordinates and dates for which we wish to get the eReefs data. 
 
@@ -91,92 +113,111 @@ In @tbl-detections below we see the set of coordinates and dates for which we wi
 The AIMS eReefs server only contains aggregated data. That is daily, monthly, or yearly aggregations of the hourly eReefs raw model output. We will use the daily aggregated data for this tutorial, however the same techniques could be applied to access the raw model data from the [National Computational Infrastructure (NCI) server](https://dapds00.nci.org.au/thredds/catalogs/fx3/catalog.html).
 :::
 
-```{r detectionsTable}
-#| tbl-cap: Loggerhead Sea Turtle detections (Strydom, 2022)
-#| label: tbl-detections
+```{python detectionsTable}
 #| code-fold: true
 #| code-summary: Show code to produce table
-# Print table of tracking detections (Strydom, 2022)
-loggerhead_data |> 
-  arrange(date_time) |> 
-  mutate(date = format(date_time, "%Y-%m-%d"), time = format(date_time, "%H:%M")) |>
-  select(date, time, longitude, latitude) |> 
-  kable() |> kable_styling() |> scroll_box(height = "300px", fixed_thead = TRUE)
+
+# Create table of tracking detections
+tbl = data.sort_values('date_time') # sort by date_time
+tbl = tbl[['date', 'time', 'longitude', 'latitude']] # select variables
+
+# Output table in html format (hide row nums; format coordinates to their precision of 1 decimal place)
+tbl = tbl.style.hide(axis = 'index').format(precision=1)
+```
+
+```{python detectionsTableOutput, echo=FALSE}
+#| tbl-cap: Loggerhead Sea Turtle detections (Strydom, 2022)
+#| label: tbl-detections
+#| class: scroll_box_y
+tbl
 ```
 
 <br>
 
 We will take advantage of the consistent file naming on the server to extract the data of interest programatically. We will first need to copy the OPeNDAP data link for one of the files within the correct model and aggregation folders and then replace the date. 
 
-Selecting a random date within the daily aggregated data with one data file per day (`daily-daily`) for the 1km hydro model (`gbr1_2.0`), we see the files have the naming format:
+Selecting a random date within the daily aggregated data (`daily-daily`; one data file per day) for the 1km hydro model (`gbr1_2.0`), we see the files have the naming format:
 
 `https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr1_2.0/daily-daily/EREEFS_AIMS-CSIRO_gbr1_2.0_hydro_daily-daily-`[YYYY-MM-DD]{style="color: red"}`.nc`
 
 We will now write a script which extracts the data for the dates and coordinates in @tbl-detections. For each unique date we will open the corresponding file on the server and extract the daily mean temperature, salinity, northward and southward current velocities for each set of coordinates corresponding to the date.
 
-```{r extractData}
+```{python extractData, eval=FALSE}
 #| code-overflow: wrap
 #| message: true
  
 # GET DATA FOR EACH DATE AND COORDINATE (LAT LON) PAIR
-t_start = Sys.time() # to track run time of extraction
+t_start = datetime.now() # to track run time of extraction
 
 ## 1. Setup variables for data extraction
 # Server file name = <file_prefix><date (yyyy-mm-dd)><file_suffix>
-file_prefix <- "https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr1_2.0/daily-daily/EREEFS_AIMS-CSIRO_gbr1_2.0_hydro_daily-daily-"
-file_suffix <- ".nc"
+file_prefix = "https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr1_2.0/daily-daily/EREEFS_AIMS-CSIRO_gbr1_2.0_hydro_daily-daily-"
+file_suffix = ".nc"
 
 # Table of dates and coordinates for which to extract data (dates as character string)
-detections <- loggerhead_data |> 
-  mutate(date = as.character(as_date(date_time))) |>
-  select(date, longitude, latitude) |> 
-  distinct()
+detections = data[['date', 'longitude', 'latitude']].drop_duplicates()
 
-extracted_data <- data.frame() # to save the extracted data
-dates <- unique(detections$date) # unique dates for which to open server files
+extracted_data = pd.DataFrame() # to save the extracted data
+dates = detections['date'].unique() # unique dates for which to open server files
 
 ## 2. For each date of interest, open a connection to the corresponding data file on the server
-for (i in 1:length(dates)) {
-  date_i <- dates[i]
+for i in range(len(dates)):
   
   # Open file
-  file_name_i <- paste0(file_prefix, date_i, file_suffix)
-  server_file_i <- open.nc(file_name_i)
+  file_name_i = file_prefix + dates[i] + file_suffix
+  server_file_i = Dataset(file_name_i)
 
   # Coordinates for which to extract data for the current date
-  coordinates_i <- detections |> dplyr::filter(date == date_i)
+  coordinates_i = detections.query("date == @date_i")
 
   # Get all coordinates in the open file (each representing the center-point of the corresponding grid cell)
-  server_lons_i <- var.get.nc(server_file_i, "longitude")
-  server_lats_i <- var.get.nc(server_file_i, "latitude")
+  server_lons_i = server_file_i.variables['longitude'][:]
+  server_lats_i = server_file_i.variables['latitude'][:]
 
   ## 3. For each coordinate (lon, lat) for the current date, get the data for the closest grid cell (1km^2) from the open server file
-  for (j in 1:nrow(coordinates_i)) {
+  for row_j in coordinates_i.itertuples():
     
     # Current coordinate of interest
-    lon_j <- coordinates_i[j,]$longitude
-    lat_j <- coordinates_i[j,]$latitude
+    lon_j = row_j.longitude
+    lat_j = row_j.latitutde
         
     # Find the index of the grid cell containing our coordinate of interest (i.e. the center-point closest to our point of interest)
-    lon_index <- which.min(abs(server_lons_i - lon_j))
-    lat_index <- which.min(abs(server_lats_i - lat_j))
+    lon_index_j = np.argmin(np.abs(server_lons_i - lon_j))
+    lat_index_j = np.argmin(np.abs(server_lats_i - lat_j))
+    # Note: This will return the closest grid cell, even for coordinates outside of the eReefs model boundary
 
-    # Setup start vector arguments for RNetCDF::var.get.nc (same for temp, salt, currents u & v)
-    start_j <- c(lon_index, lat_index, 16, 1) # k = 16 corresponds to depth = 0.5m
-    count_j <- c(1, 1, 1, 1) # only extracting a single value for each variable
+    # Setup the vector of dimension indices for which to extract data
+    dim_ind = [1, 16, lat_index_j, lon_index_j]
+    ######################################## 
+    # Recall the order of the dimensions (time, k, latitude, longitude) from the previous tutorial. Therefore we want [time = 1 (as we're using the daily files this is the only option), k = 16 corresponding to a depth of 0.5m, lat_index_j, lon_index_j]. If you are still confused, go back to the previous tutorial or have a look at the structure of one of the server files by uncommenting the following 5 lines of code:
+    # not_yet_run = True  # used so the following lines are only run once
+    # if not_yet_run: 
+    #   print(server_file_i.dimensions)
+    #   print(server_file_i.variables)
+    #   not_yet_run = False
+    ########################################
 
     # Get the data for the grid cell containing our point of interest
-    temp_j <- var.get.nc(server_file_i, "temp", start_j, count_j)
-    salt_j <- var.get.nc(server_file_i, "salt", start_j, count_j)
-    u_j <- var.get.nc(server_file_i, "u", start_j, count_j)
-    v_j <- var.get.nc(server_file_i, "v", start_j, count_j)
-    extracted_data_j <- data.frame(date_i, lon_j, lat_j, temp_j, salt_j, u_j, v_j)
+    temp_j = server_file_i.variables['temp'][0, 15, lat_index_j, lon_index_j]
+    salt_j = server_file_i.variables['salt']dim_ind
+    u_j = server_file_i.variables['u']dim_ind
+    v_j = server_file_i.variables['v']dim_ind
+
+    extracted_data_j = pd.DataFrame({
+      'date_i': date_i,
+      'lon_j': lon_j,
+      'lat_j': lat_j,
+      'temp_j': temp_j,
+      'salt_j': salt_j,
+      'u_j': u_j,
+      'v_j': v_j
+    })
 
     ## 4. Save data in memory and repeat for next date-coordinate pair
     extracted_data <- rbind(extracted_data, extracted_data_j)
   }
   # Close connection to open server file and move to the next date
-  close.nc(server_file_i)
+  server_file_i.close()
 }
 
 # Calculate the run time of the extraction
@@ -187,9 +228,27 @@ extract_time <- t_stop - t_start
 colnames(extracted_data) <- c("date", "lon", "lat", "temp", "salt", "u", "v")
 ```
 
-Our extracted data is shown below in @tbl-extracted-data. To get this data we openned `r length(dates)` files on the server (corresponding to unique dates in @tbl-detections) and extracted data for `r nrow(detections)` unique date-coordinate pairs. On our machine this took `r paste(round(as.numeric(extract_time), 1), units(extract_time))` to run.
+:::{.callout-caution appearance="simple"}
+In the code above we match the closest eReefs model grid cell to each point in our list of coordinates (i.e. for each tracking detection). This will therefore match grid cells to all the coordinates, even if they are not within the eReefs model boundary. This behaviour may be useful when we have points right along the coastline as the eReefs models have small gaps at many points along the coast (see image below). However, in other cases this behaviour may not be desirable. For example, if we had points down near Sydney they would be matched to the closest eReefs grid cells (somewhere up near Brisbane) and the extracted data would be erroneous.
 
-```{r printExtractedData}
+[![](images/ereefs_model_boundary_and_grid_cells.jpeg)](images/ereefs_model_boundary_and_grid_cells.jpeg)
+:::
+
+```{r eval=FALSE}
+# Minimize the number of files opened 
+# Check if points are in the eReefs model scope
+# Check if multiple points in signle model grid cell
+# 
+```
+
+
+```{r eval=FALSE}
+Our extracted data is shown below in @tbl-extracted-data. To get this data we openned `r length(dates)` files on the server (corresponding to unique dates in @tbl-detections) and extracted data for `r nrow(detections)` unique date-coordinate pairs. On our machine this took `r paste(round(as.numeric(extract_time), 1), units(extract_time))` to run.
+```
+
+
+
+```{r extractedDataTable, eval=FALSE}
 #| tbl-cap: Extracted daily mean temperature, salinity, and east- and northward current velocities (u, v respectively) for Loggerhead Sea Turtle detections (Strydom, 2022)
 #| label: tbl-extracted-data
 
@@ -202,7 +261,7 @@ extracted_data |> kable() |> kable_styling() |> scroll_box(height = "300px", fix
 
 We will match up the eReefs data with our tracking detections by combining the two datasets based on common date, longitude and latitude values.
 
-```{r}
+```{r matchedDataTable, eval=FALSE}
 #| tbl-cap: Loggerhead Sea Turtle tracking detections (Strydom, 2022) and corresponding eReefs daily mean temperature, salinity, east- and northward current velocities (u, v respectively).
 #| label: tbl-combined-data
 

@@ -127,6 +127,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+<script src="../../../../site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="../../../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../../../styles.css">
@@ -217,7 +220,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <div class="tutorial-description">
-<p><em>Learn the basics of extracting eReefs data from the AIMS server with OPeNDAP in <i class="fa-brands fa-python" aria-label="python"></i> python.</em></p>
+<p>Learn the basics of extracting eReefs data from the AIMS server with OPeNDAP in <i class="fa-brands fa-python" aria-label="python"></i> python.</p>
 </div>
 <p>In this tutorial we will look at how to access eReefs data directly from the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS THREDDS server</a> in python.</p>
 <p>This server hosts aggregated eReefs model data in netCDF file format and offers access to the data files via OPeNDAP, HTTP Server, and Web Map Service (WMS). While we could download the data files manually via the HTTPServer link, this approach is cumbersome when downloading multiple files, given their large size. Thankfully, OPeNDAP provides a way to access the data files over the internet and extract only the data we want.</p>
@@ -232,7 +235,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="python-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="python-libraries">Python libraries</h2>
-<div class="cell" data-execution_count="1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> netCDF4 <span class="im">import</span> Dataset, num2date</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cartopy</span>
@@ -245,11 +248,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="connect-to-a-file-on-the-server">Connect to a file on the server</h2>
 <p>First we need to find the right NetCDF file on the server. The available eReefs data NetCDF files are listed in the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS THREDDS Server catalogue</a>. We will navigate to the eReefs 4 km Hydrodynamic Model daily aggregated data for the month of December 2022 and copy the OPeNDAP data URL.</p>
 <p><img src="images/server_navigation.gif" class="img-fluid"></p>
-<div class="cell" data-execution_count="2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-overflow-wrap code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>input_file <span class="op">=</span> <span class="st">"https://thredds.ereefs.aims.gov.au/thredds/dodsC/s3://aims-ereefs-public-prod/derived/ncaggregate/ereefs/gbr4_v2/daily-monthly/EREEFS_AIMS-CSIRO_gbr4_v2_hydro_daily-monthly-2022-12.nc"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then open a connection to this file using the <code>Dataset</code> function from the <code>netCDF4</code> library.</p>
-<div class="cell" data-execution_count="3">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc <span class="op">=</span> Dataset(input_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="callout callout-style-simple callout-note">
@@ -270,9 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 <code>dailyAggDec22_nc.title</code>
 </summary>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc.title</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
 <pre><code>'eReefs AIMS-CSIRO GBR4 Hydrodynamic v2 daily aggregation'</code></pre>
 </div>
 </div>
@@ -281,9 +283,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 <code>dailyAggDec22_nc.description</code>
 </summary>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-overflow-wrap code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc.description</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
 <pre><code>'Aggregation of raw hourly input data (from eReefs AIMS-CSIRO GBR4 Hydrodynamic v2 subset) to daily means. Also calculates mean magnitude of wind and ocean current speeds. Data is regridded from curvilinear (per input data) to rectilinear via inverse weighted distance from up to 4 closest cells.'</code></pre>
 </div>
 </div>
@@ -292,13 +293,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 <code>dailyAggDec22_nc.dimensions</code>
 </summary>
-<div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc.dimensions</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
-<pre><code>{'time': &lt;class 'netCDF4._netCDF4.Dimension'&gt; (unlimited): name = 'time', size = 31,
- 'k': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'k', size = 17,
- 'latitude': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'latitude', size = 723,
- 'longitude': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'longitude', size = 491}</code></pre>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>{'time': &lt;class 'netCDF4._netCDF4.Dimension'&gt; (unlimited): name = 'time', size = 31, 'k': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'k', size = 17, 'latitude': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'latitude', size = 723, 'longitude': &lt;class 'netCDF4._netCDF4.Dimension'&gt;: name = 'longitude', size = 491}</code></pre>
 </div>
 </div>
 </details>
@@ -306,178 +303,165 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 <code>dailyAggDec22_nc.variables</code>
 </summary>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc.variables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
 <pre><code>{'mean_cur': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 mean_cur(time, k, latitude, longitude)
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/LCEWMP01/
-     coordinates: time zc latitude longitude
-     units: ms-1
-     short_name: mean_cur
-     aggregation: mean_speed
-     standard_name: mean_current_speed
-     long_name: mean_current_speed
-     _ChunkSizes: [  1   1 133 491]
- unlimited dimensions: time
- current shape = (31, 17, 723, 491)
- filling off,
- 'salt': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 salt(time, k, latitude, longitude)
-     qudt__unit: http://qudt.org/vocab/unit/PSU
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/PSLTMP01/
-     coordinates: time zc latitude longitude
-     short_name: salt
-     aggregation: Daily
-     units: PSU
-     long_name: Salinity
-     _ChunkSizes: [  1   1 133 491]
- unlimited dimensions: time
- current shape = (31, 17, 723, 491)
- filling off,
- 'temp': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 temp(time, k, latitude, longitude)
-     puv__parameter: https://vocab.nerc.ac.uk/collection/P01/current/TEMPMP01/
-     coordinates: time zc latitude longitude
-     short_name: temp
-     aggregation: Daily
-     units: degrees C
-     long_name: Temperature
-     _ChunkSizes: [  1   1 133 491]
- unlimited dimensions: time
- current shape = (31, 17, 723, 491)
- filling off,
- 'u': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 u(time, k, latitude, longitude)
-     vector_components: u v
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/LCEWMP01/
-     coordinates: time zc latitude longitude
-     short_name: u
-     standard_name: eastward_sea_water_velocity
-     vector_name: Currents
-     aggregation: Daily
-     units: ms-1
-     long_name: Eastward current
-     _ChunkSizes: [  1   1 133 491]
- unlimited dimensions: time
- current shape = (31, 17, 723, 491)
- filling off,
- 'v': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 v(time, k, latitude, longitude)
-     vector_components: u v
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/LCNSMP01/
-     coordinates: time zc latitude longitude
-     short_name: v
-     standard_name: northward_sea_water_velocity
-     vector_name: Currents
-     aggregation: Daily
-     units: ms-1
-     long_name: Northward current
-     _ChunkSizes: [  1   1 133 491]
- unlimited dimensions: time
- current shape = (31, 17, 723, 491)
- filling off,
- 'zc': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float64 zc(k)
-     units: m
-     positive: up
-     long_name: Z coordinate
-     axis: Z
-     coordinate_type: Z
-     _CoordinateAxisType: Height
-     _CoordinateZisPositive: up
- unlimited dimensions: 
- current shape = (17,)
- filling off,
- 'time': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float64 time(time)
-     units: days since 1990-01-01 00:00:00 +10
-     long_name: Time
-     standard_name: time
-     coordinate_type: time
-     puv__uom: http://vocab.nerc.ac.uk/collection/P06/current/UTAA/
-     calendar: gregorian
-     _CoordinateAxisType: Time
-     _ChunkSizes: 1024
- unlimited dimensions: time
- current shape = (31,)
- filling off,
- 'latitude': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float64 latitude(latitude)
-     units: degrees_north
-     long_name: Latitude
-     standard_name: latitude
-     coordinate_type: latitude
-     projection: geographic
-     puv__ofProperty: http://vocab.nerc.ac.uk/collection/S06/current/S0600045/
-     puv__uom: http://vocab.nerc.ac.uk/collection/P06/current/DEGN/
-     _CoordinateAxisType: Lat
- unlimited dimensions: 
- current shape = (723,)
- filling off,
- 'longitude': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float64 longitude(longitude)
-     puv__uom: http://vocab.nerc.ac.uk/collection/P06/current/DEGE/
-     units: degrees_east
-     long_name: Longitude
-     standard_name: longitude
-     coordinate_type: longitude
-     projection: geographic
-     _CoordinateAxisType: Lon
- unlimited dimensions: 
- current shape = (491,)
- filling off,
- 'mean_wspeed': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 mean_wspeed(time, latitude, longitude)
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/ESEWMPXX/
-     coordinates: time latitude longitude
-     units: ms-1
-     short_name: mean_wspeed
-     aggregation: mean_speed
-     standard_name: mean_wind_speed
-     long_name: mean_wind_speed
-     _ChunkSizes: [  1 133 491]
- unlimited dimensions: time
- current shape = (31, 723, 491)
- filling off,
- 'eta': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 eta(time, latitude, longitude)
-     puv__parameter: https://vocab.nerc.ac.uk/collection/P01/current/ASLVMP01/
-     coordinates: time latitude longitude
-     short_name: eta
-     standard_name: sea_surface_height_above_geoid
-     aggregation: Daily
-     units: metre
-     positive: up
-     long_name: Surface elevation
-     _ChunkSizes: [  1 133 491]
- unlimited dimensions: time
- current shape = (31, 723, 491)
- filling off,
- 'wspeed_u': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 wspeed_u(time, latitude, longitude)
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/ESEWMPXX/
-     coordinates: time latitude longitude
-     short_name: wspeed_u
-     aggregation: Daily
-     units: ms-1
-     long_name: eastward_wind
-     _ChunkSizes: [  1 133 491]
- unlimited dimensions: time
- current shape = (31, 723, 491)
- filling off,
- 'wspeed_v': &lt;class 'netCDF4._netCDF4.Variable'&gt;
- float32 wspeed_v(time, latitude, longitude)
-     puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/ESNSMPXX/
-     coordinates: time latitude longitude
-     short_name: wspeed_v
-     aggregation: Daily
-     units: ms-1
-     long_name: northward_wind
-     _ChunkSizes: [  1 133 491]
- unlimited dimensions: time
- current shape = (31, 723, 491)
- filling off}</code></pre>
+float32 mean_cur(time, k, latitude, longitude)
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/LCEWMP01/
+    coordinates: time zc latitude longitude
+    units: ms-1
+    short_name: mean_cur
+    aggregation: mean_speed
+    standard_name: mean_current_speed
+    long_name: mean_current_speed
+    _ChunkSizes: [  1   1 133 491]
+unlimited dimensions: time
+current shape = (31, 17, 723, 491)
+filling off, 'salt': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 salt(time, k, latitude, longitude)
+    qudt__unit: http://qudt.org/vocab/unit/PSU
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/PSLTMP01/
+    coordinates: time zc latitude longitude
+    short_name: salt
+    aggregation: Daily
+    units: PSU
+    long_name: Salinity
+    _ChunkSizes: [  1   1 133 491]
+unlimited dimensions: time
+current shape = (31, 17, 723, 491)
+filling off, 'temp': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 temp(time, k, latitude, longitude)
+    puv__parameter: https://vocab.nerc.ac.uk/collection/P01/current/TEMPMP01/
+    coordinates: time zc latitude longitude
+    short_name: temp
+    aggregation: Daily
+    units: degrees C
+    long_name: Temperature
+    _ChunkSizes: [  1   1 133 491]
+unlimited dimensions: time
+current shape = (31, 17, 723, 491)
+filling off, 'u': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 u(time, k, latitude, longitude)
+    vector_components: u v
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/LCEWMP01/
+    coordinates: time zc latitude longitude
+    short_name: u
+    standard_name: eastward_sea_water_velocity
+    vector_name: Currents
+    aggregation: Daily
+    units: ms-1
+    long_name: Eastward current
+    _ChunkSizes: [  1   1 133 491]
+unlimited dimensions: time
+current shape = (31, 17, 723, 491)
+filling off, 'v': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 v(time, k, latitude, longitude)
+    vector_components: u v
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/LCNSMP01/
+    coordinates: time zc latitude longitude
+    short_name: v
+    standard_name: northward_sea_water_velocity
+    vector_name: Currents
+    aggregation: Daily
+    units: ms-1
+    long_name: Northward current
+    _ChunkSizes: [  1   1 133 491]
+unlimited dimensions: time
+current shape = (31, 17, 723, 491)
+filling off, 'zc': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float64 zc(k)
+    units: m
+    positive: up
+    long_name: Z coordinate
+    axis: Z
+    coordinate_type: Z
+    _CoordinateAxisType: Height
+    _CoordinateZisPositive: up
+unlimited dimensions: 
+current shape = (17,)
+filling off, 'time': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float64 time(time)
+    units: days since 1990-01-01 00:00:00 +10
+    long_name: Time
+    standard_name: time
+    coordinate_type: time
+    puv__uom: http://vocab.nerc.ac.uk/collection/P06/current/UTAA/
+    calendar: gregorian
+    _CoordinateAxisType: Time
+    _ChunkSizes: 1024
+unlimited dimensions: time
+current shape = (31,)
+filling off, 'latitude': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float64 latitude(latitude)
+    units: degrees_north
+    long_name: Latitude
+    standard_name: latitude
+    coordinate_type: latitude
+    projection: geographic
+    puv__ofProperty: http://vocab.nerc.ac.uk/collection/S06/current/S0600045/
+    puv__uom: http://vocab.nerc.ac.uk/collection/P06/current/DEGN/
+    _CoordinateAxisType: Lat
+unlimited dimensions: 
+current shape = (723,)
+filling off, 'longitude': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float64 longitude(longitude)
+    puv__uom: http://vocab.nerc.ac.uk/collection/P06/current/DEGE/
+    units: degrees_east
+    long_name: Longitude
+    standard_name: longitude
+    coordinate_type: longitude
+    projection: geographic
+    _CoordinateAxisType: Lon
+unlimited dimensions: 
+current shape = (491,)
+filling off, 'mean_wspeed': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 mean_wspeed(time, latitude, longitude)
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/ESEWMPXX/
+    coordinates: time latitude longitude
+    units: ms-1
+    short_name: mean_wspeed
+    aggregation: mean_speed
+    standard_name: mean_wind_speed
+    long_name: mean_wind_speed
+    _ChunkSizes: [  1 133 491]
+unlimited dimensions: time
+current shape = (31, 723, 491)
+filling off, 'eta': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 eta(time, latitude, longitude)
+    puv__parameter: https://vocab.nerc.ac.uk/collection/P01/current/ASLVMP01/
+    coordinates: time latitude longitude
+    short_name: eta
+    standard_name: sea_surface_height_above_geoid
+    aggregation: Daily
+    units: metre
+    positive: up
+    long_name: Surface elevation
+    _ChunkSizes: [  1 133 491]
+unlimited dimensions: time
+current shape = (31, 723, 491)
+filling off, 'wspeed_u': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 wspeed_u(time, latitude, longitude)
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/ESEWMPXX/
+    coordinates: time latitude longitude
+    short_name: wspeed_u
+    aggregation: Daily
+    units: ms-1
+    long_name: eastward_wind
+    _ChunkSizes: [  1 133 491]
+unlimited dimensions: time
+current shape = (31, 723, 491)
+filling off, 'wspeed_v': &lt;class 'netCDF4._netCDF4.Variable'&gt;
+float32 wspeed_v(time, latitude, longitude)
+    puv__parameter: http://vocab.nerc.ac.uk/collection/P01/current/ESNSMPXX/
+    coordinates: time latitude longitude
+    short_name: wspeed_v
+    aggregation: Daily
+    units: ms-1
+    long_name: northward_wind
+    _ChunkSizes: [  1 133 491]
+unlimited dimensions: time
+current shape = (31, 723, 491)
+filling off}</code></pre>
 </div>
 </div>
 </details>
@@ -503,120 +487,139 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <summary>
 Table of eReefs depths corresponding to index <code>k</code>
 </summary>
-<table class="table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 30%">
-<col style="width: 56%">
-</colgroup>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped">
 <thead>
 <tr class="header">
-<th>Index (k)</th>
-<th>Hydrodynamic 1km model</th>
-<th>Hydrodynamic &amp; BioGeoChemical 4km models</th>
+<th style="text-align: right;">Index k (R)</th>
+<th style="text-align: right;">Index k (Python)</th>
+<th style="text-align: right;">Hydrodynamic 1km model</th>
+<th style="text-align: right;">Hydrodynamic &amp; BioGeoChemical 4km models</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
-<td>-140.00 m</td>
-<td>-145.00 m</td>
+<td style="text-align: right; color: grey !important;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-140.00</td>
+<td style="text-align: right;">-145.00</td>
 </tr>
 <tr class="even">
-<td>2</td>
-<td>-120.00 m</td>
-<td>-120.00 m</td>
+<td style="text-align: right; color: grey !important;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">-120.00</td>
+<td style="text-align: right;">-120.00</td>
 </tr>
 <tr class="odd">
-<td>3</td>
-<td>-103.00 m</td>
-<td>-103.00 m</td>
+<td style="text-align: right; color: grey !important;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">-103.00</td>
+<td style="text-align: right;">-103.00</td>
 </tr>
 <tr class="even">
-<td>4</td>
-<td>-88.00 m</td>
-<td>-88.00 m</td>
+<td style="text-align: right; color: grey !important;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">-88.00</td>
+<td style="text-align: right;">-88.00</td>
 </tr>
 <tr class="odd">
-<td>5</td>
-<td>-73.00 m</td>
-<td>-73.00 m</td>
+<td style="text-align: right; color: grey !important;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">-73.00</td>
+<td style="text-align: right;">-73.00</td>
 </tr>
 <tr class="even">
-<td>6</td>
-<td>-60.00 m</td>
-<td>-60.00 m</td>
+<td style="text-align: right; color: grey !important;">6</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">-60.00</td>
+<td style="text-align: right;">-60.00</td>
 </tr>
 <tr class="odd">
-<td>7</td>
-<td>-49.00 m</td>
-<td>-49.00 m</td>
+<td style="text-align: right; color: grey !important;">7</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">-49.00</td>
+<td style="text-align: right;">-49.00</td>
 </tr>
 <tr class="even">
-<td>8</td>
-<td>-39.50 m</td>
-<td>-39.50 m</td>
+<td style="text-align: right; color: grey !important;">8</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">-39.50</td>
+<td style="text-align: right;">-39.50</td>
 </tr>
 <tr class="odd">
-<td>9</td>
-<td>-31.00 m</td>
-<td>-31.00 m</td>
+<td style="text-align: right; color: grey !important;">9</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">-31.00</td>
+<td style="text-align: right;">-31.00</td>
 </tr>
 <tr class="even">
-<td>10</td>
-<td>-24.00 m</td>
-<td>-23.75 m</td>
+<td style="text-align: right; color: grey !important;">10</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">-24.00</td>
+<td style="text-align: right;">-23.75</td>
 </tr>
 <tr class="odd">
-<td>11</td>
-<td>-18.00 m</td>
-<td>-17.75 m</td>
+<td style="text-align: right; color: grey !important;">11</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">-18.00</td>
+<td style="text-align: right;">-17.75</td>
 </tr>
 <tr class="even">
-<td>12</td>
-<td>-13.00 m</td>
-<td>-12.75 m</td>
+<td style="text-align: right; color: grey !important;">12</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">-13.00</td>
+<td style="text-align: right;">-12.75</td>
 </tr>
 <tr class="odd">
-<td>13</td>
-<td>-9.00 m</td>
-<td>-8.80 m</td>
+<td style="text-align: right; color: grey !important;">13</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">-9.00</td>
+<td style="text-align: right;">-8.80</td>
 </tr>
 <tr class="even">
-<td>14</td>
-<td>-5.25 m</td>
-<td>-5.55 m</td>
+<td style="text-align: right; color: grey !important;">14</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">-5.25</td>
+<td style="text-align: right;">-5.55</td>
 </tr>
 <tr class="odd">
-<td>15</td>
-<td>-2.35 m</td>
-<td>-3.00 m</td>
+<td style="text-align: right; color: grey !important;">15</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">-2.35</td>
+<td style="text-align: right;">-3.00</td>
 </tr>
 <tr class="even">
-<td>16</td>
-<td>-0.50 m</td>
-<td>-1.50 m</td>
+<td style="text-align: right; color: grey !important;">16</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">-0.50</td>
+<td style="text-align: right;">-1.50</td>
 </tr>
 <tr class="odd">
-<td>17</td>
-<td>n/a</td>
-<td>-0.50 m</td>
+<td style="text-align: right; color: grey !important;">17</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">-0.50</td>
 </tr>
 </tbody>
 </table>
+
+
+</div>
+</div>
 </details>
 <p><strong>Longitude and latitude</strong>: We want temperatures for every available longitude and latitude so we can plot the data across the entire spatial range of the eReefs model. Therefore we want every index of latitude and longitude. In python this is easily specified by using the notation <code>vector[:]</code> which can be though of as short hand for <code>vector[&lt;minimum index&gt;: &lt;maximum index&gt;]</code>.</p>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># EXTRACT DATA</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m <span class="op">=</span> dailyAggDec22_nc.variables[<span class="st">'temp'</span>][</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">10</span>,  <span class="co"># time index --&gt; 10th day of month</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">16</span>,  <span class="co"># depth index k --&gt; 1.5m depth</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  :,   <span class="co"># latitude indices --&gt; all possible</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  :,   <span class="co"># longitude indices --&gt; all possible</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># EXTRACT DATA</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m <span class="op">=</span> dailyAggDec22_nc.variables[<span class="st">'temp'</span>][</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dv">10</span>,  <span class="co"># time index --&gt; 10th day of month</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dv">16</span>,  <span class="co"># depth index k --&gt; 1.5m depth</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  :,   <span class="co"># latitude indices --&gt; all possible</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  :,   <span class="co"># longitude indices --&gt; all possible</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>temps_10Dec22_1p5m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
 <pre><code>masked_array(
   data=[[      nan,       nan,       nan, ...,       nan,       nan,
                nan],
@@ -640,28 +643,31 @@ Table of eReefs depths corresponding to index <code>k</code>
 <section id="plot-data" class="level2">
 <h2 class="anchored" data-anchor-id="plot-data">Plot data</h2>
 <p>Let’s plot the data. To do this we will need to extract the longitude and latitude variables from the open server file.</p>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lons <span class="op">=</span> dailyAggDec22_nc.variables[<span class="st">"longitude"</span>][:]</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>lats <span class="op">=</span> dailyAggDec22_nc.variables[<span class="st">"latitude"</span>][:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lons <span class="op">=</span> dailyAggDec22_nc.variables[<span class="st">"longitude"</span>][:]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>lats <span class="op">=</span> dailyAggDec22_nc.variables[<span class="st">"latitude"</span>][:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup plot canvas</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>), dpi<span class="op">=</span><span class="dv">80</span>, facecolor<span class="op">=</span><span class="st">'w'</span>, edgecolor<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.axes(projection<span class="op">=</span>ccrs.PlateCarree())</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>ax.set_extent([<span class="dv">135</span>, <span class="dv">165</span>, <span class="op">-</span><span class="fl">6.5</span>, <span class="op">-</span><span class="fl">29.5</span>], ccrs.PlateCarree())</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the data to the plot</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>plt.contourf(lons, lats, temps_10Dec22_1p5m, <span class="dv">30</span>, transform<span class="op">=</span>ccrs.PlateCarree())</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add landmass coastlines shapefile</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>ax.coastlines()</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup plot canvas</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">8</span>), dpi<span class="op">=</span><span class="dv">80</span>, facecolor<span class="op">=</span><span class="st">'w'</span>, edgecolor<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> plt.axes(projection<span class="op">=</span>ccrs.PlateCarree())</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>ax.set_extent([<span class="dv">135</span>, <span class="dv">165</span>, <span class="op">-</span><span class="fl">6.5</span>, <span class="op">-</span><span class="fl">29.5</span>], ccrs.PlateCarree())</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the data to the plot</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.contourf(lons, lats, temps_10Dec22_1p5m, <span class="dv">30</span>, transform<span class="op">=</span>ccrs.PlateCarree())</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Add landmass coastlines shapefile</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;cartopy.mpl.contour.GeoContourSet object at 0x000001B5455B79A0&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ax.coastlines()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Show plot</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
 <div id="fig-temps-plot" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<p><img src="basic_server_access_python_files/figure-html/fig-temps-plot-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="basic_server_access_python_files/figure-html/fig-temps-plot-1.png" class="img-fluid figure-img" width="1152"></p>
 <p></p><figcaption class="figure-caption">Figure&nbsp;1: Extracted eReefs daily aggregated mean temperature at 1.5m depth for 10 December 2022.</figcaption><p></p>
 </figure>
 </div>
@@ -672,8 +678,8 @@ Table of eReefs depths corresponding to index <code>k</code>
 <section id="close-file-connection" class="level2">
 <h2 class="anchored" data-anchor-id="close-file-connection">Close file connection</h2>
 <p>Now that we are done with the openned server file it is best practice to close it.</p>
-<div class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>dailyAggDec22_nc.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

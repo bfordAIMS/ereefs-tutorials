@@ -243,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RNetCDF) <span class="co"># to access server data files via OPeNDAP</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr) <span class="co"># to efficiently read in data</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># to create clean variable names</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># to create consistent, 'clean' variable names</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># for data manipulation and plotting with ggplot2</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate) <span class="co"># for working with date and time variables </span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet) <span class="co"># to create an interactive map of the tracking locations</span></span>
@@ -289,21 +289,22 @@ Read more: Tracking marine animals
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove land based records (as a result of coordinate uncertainty)</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>land_based_records <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">4022992331</span>, <span class="dv">4022992326</span>, <span class="dv">4022992312</span>, <span class="dv">4022992315</span>, <span class="dv">4022992322</span>, <span class="dv">4022992306</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>loggerhead_data <span class="ot">&lt;-</span> loggerhead_data <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>(record_id <span class="sc">%in%</span> land_based_records))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the variables relevant to this tutorial</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>loggerhead_data <span class="ot">&lt;-</span> loggerhead_data <span class="sc">|&gt;</span> </span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(longitude, latitude, date_time, record_id, species)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># View the tracking locations on an interactive map</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>loggerhead_data <span class="sc">|&gt;</span> </span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">leaflet</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMarkers</span>(<span class="at">label =</span> <span class="sc">~</span>date_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>loggerhead_data <span class="ot">&lt;-</span> loggerhead_data <span class="sc">|&gt;</span> </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>(record_id <span class="sc">%in%</span> land_based_records))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Select the variables relevant to this tutorial</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>loggerhead_data <span class="ot">&lt;-</span> loggerhead_data <span class="sc">|&gt;</span> </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(longitude, latitude, date_time, record_id, species)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># View the tracking locations on an interactive map</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>loggerhead_data <span class="sc">|&gt;</span> </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">leaflet</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMarkers</span>(<span class="at">label =</span> <span class="sc">~</span>date_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="fig-data-map" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-57fb646bcb7e5a2a6e22" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-57fb646bcb7e5a2a6e22">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-20.5,-25.5,-24.5,-18.5,-14.5,-26.5,-19.5,-10.5,-20.5,-22.5,-21.5,-11.5,-19.5,-18.5,-24.5,-15.5,-16.5,-13.5,-21.5,-12.5,-9.5,-23.5,-16.5,-23.5,-17.5],[150.5,153.5,152.5,147.5,145.5,153.5,148.5,143.5,149.5,151.5,150.5,143.5,149.5,146.5,153.5,145.5,145.5,144.5,151.5,143.5,143.5,152.5,146.5,151.5,146.5],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["2022-01-17 17:06:32","2022-01-02 21:49:55","2021-12-21 17:57:22","2022-01-27 17:00:04","2022-02-12 10:34:12","2022-02-12 08:59:01","2022-01-23 07:02:18","2022-04-14 06:31:48","2022-01-19 17:44:38","2022-01-09 20:25:01","2022-01-14 18:26:17","2022-04-09 22:00:54","2022-01-21 07:22:08","2022-01-30 17:02:42","2022-02-03 21:37:56","2022-02-09 18:33:03","2022-02-07 07:15:30","2022-03-25 07:10:49","2022-01-13 06:28:09","2022-04-01 18:41:42","2022-04-21 10:30:09","2022-01-05 07:33:53","2022-02-06 18:25:38","2022-01-06 05:03:23","2022-02-02 09:14:56"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-26.5,-9.5],"lng":[143.5,153.5]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-015ff245516d0e9f9be2" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-015ff245516d0e9f9be2">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-20.5,-25.5,-24.5,-18.5,-14.5,-26.5,-19.5,-10.5,-20.5,-22.5,-21.5,-11.5,-19.5,-18.5,-24.5,-15.5,-16.5,-13.5,-21.5,-12.5,-9.5,-23.5,-16.5,-23.5,-17.5],[150.5,153.5,152.5,147.5,145.5,153.5,148.5,143.5,149.5,151.5,150.5,143.5,149.5,146.5,153.5,145.5,145.5,144.5,151.5,143.5,143.5,152.5,146.5,151.5,146.5],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["2022-01-17 17:06:32","2022-01-02 21:49:55","2021-12-21 17:57:22","2022-01-27 17:00:04","2022-02-12 10:34:12","2022-02-12 08:59:01","2022-01-23 07:02:18","2022-04-14 06:31:48","2022-01-19 17:44:38","2022-01-09 20:25:01","2022-01-14 18:26:17","2022-04-09 22:00:54","2022-01-21 07:22:08","2022-01-30 17:02:42","2022-02-03 21:37:56","2022-02-09 18:33:03","2022-02-07 07:15:30","2022-03-25 07:10:49","2022-01-13 06:28:09","2022-04-01 18:41:42","2022-04-21 10:30:09","2022-01-05 07:33:53","2022-02-06 18:25:38","2022-01-06 05:03:23","2022-02-02 09:14:56"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-26.5,-9.5],"lng":[143.5,153.5]}},"evals":[],"jsHooks":[]}</script>
 <p></p><figcaption class="figure-caption">Figure&nbsp;1: Loggerhead Sea Turtle satellite tracking records (December 2021 - April 2022)</figcaption><p></p>
 </figure>
 </div>
@@ -311,7 +312,7 @@ Read more: Tracking marine animals
 </section>
 <section id="extracting-data-from-the-server" class="level2">
 <h2 class="anchored" data-anchor-id="extracting-data-from-the-server">Extracting data from the server</h2>
-<p>In the preceeding tutorial <a href="../server-data-access-r/server_data_access_r.html">Accessing eReefs data from the AIMS server</a> we introduced the process of extracting eReefs data from the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS server</a>. We will now extend this methodology to extract data for a set of points and dates.</p>
+<p>In the preceeding tutorial <a href="../../../../tutorials/r/access-ereefs-data-server/basic-server-access/basic_server_access_r.html">Accessing eReefs data from the AIMS server</a> we introduced the process of extracting eReefs data from the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS server</a>. We will now extend this methodology to extract data for a set of points and dates.</p>
 <p>In <a href="#tbl-detections">Table&nbsp;1</a> below we see the set of coordinates and dates for which we wish to get the eReefs data.</p>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
@@ -554,31 +555,54 @@ Read more: Tracking marine animals
 <span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    lat_index <span class="ot">&lt;-</span> <span class="fu">which.min</span>(<span class="fu">abs</span>(server_lats_i <span class="sc">-</span> lat_j))</span>
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setup start vector arguments for RNetCDF::var.get.nc (same for temp, salt, currents u &amp; v)</span></span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    start_j <span class="ot">&lt;-</span> <span class="fu">c</span>(lon_index, lat_index, <span class="dv">16</span>, <span class="dv">1</span>) <span class="co"># k = 16 corresponds to depth = 0.5m</span></span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    count_j <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="co"># only extracting a single value for each variable</span></span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the data for the grid cell containing our point of interest</span></span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    temp_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"temp"</span>, start_j, count_j)</span>
-<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    salt_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"salt"</span>, start_j, count_j)</span>
-<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    u_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"u"</span>, start_j, count_j)</span>
-<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    v_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"v"</span>, start_j, count_j)</span>
-<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    extracted_data_j <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(date_i, lon_j, lat_j, temp_j, salt_j, u_j, v_j)</span>
-<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>    <span class="do">## 4. Save data in memory and repeat for next date-coordinate pair</span></span>
-<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    extracted_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(extracted_data, extracted_data_j)</span>
-<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Close connection to open server file and move to the next date</span></span>
-<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">close.nc</span>(server_file_i)</span>
-<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the run time of the extraction</span></span>
-<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>t_stop <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>extract_time <span class="ot">&lt;-</span> t_stop <span class="sc">-</span> t_start</span>
-<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename the extracted data columns</span></span>
-<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(extracted_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"temp"</span>, <span class="st">"salt"</span>, <span class="st">"u"</span>, <span class="st">"v"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="do">###################################</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Recall the order of the dimensions (longitude, latitude, k, time) from the previous tutorial. Therefore we want [lon_index, lat_index, k = 16 corresponding to a depth of 0.5m, time = 1 (as we're using the daily files this is the only option)]. If you are still confused go back to the previous tutorial or have a look at the structure of one of the server files by uncommenting the following 5 lines of code:</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># not_yet_run = TRUE  # used so the following lines are only run once</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if (not_yet_run) { </span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   print.nc(server_file_i)</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">#   not_yet_run = FALSE</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># }</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>    <span class="do">##################################</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>    start_j <span class="ot">&lt;-</span> <span class="fu">c</span>(lon_index, lat_index, <span class="dv">16</span>, <span class="dv">1</span>) <span class="co"># k = 16 corresponds to depth = 0.5m</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>    count_j <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>) <span class="co"># only extracting a single value for each variable</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Get the data for the grid cell containing our point of interest</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>    temp_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"temp"</span>, start_j, count_j)</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>    salt_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"salt"</span>, start_j, count_j)</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>    u_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"u"</span>, start_j, count_j)</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>    v_j <span class="ot">&lt;-</span> <span class="fu">var.get.nc</span>(server_file_i, <span class="st">"v"</span>, start_j, count_j)</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>    extracted_data_j <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(date_i, lon_j, lat_j, temp_j, salt_j, u_j, v_j)</span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>    <span class="do">## 4. Save data in memory and repeat for next date-coordinate pair</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    extracted_data <span class="ot">&lt;-</span> <span class="fu">rbind</span>(extracted_data, extracted_data_j)</span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Close connection to open server file and move to the next date</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">close.nc</span>(server_file_i)</span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the run time of the extraction</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>t_stop <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a>extract_time <span class="ot">&lt;-</span> t_stop <span class="sc">-</span> t_start</span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename the extracted data columns</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(extracted_data) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"lon"</span>, <span class="st">"lat"</span>, <span class="st">"temp"</span>, <span class="st">"salt"</span>, <span class="st">"u"</span>, <span class="st">"v"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Our extracted data is shown below in <a href="#tbl-extracted-data">Table&nbsp;2</a>. To get this data we openned 24 files on the server (corresponding to unique dates in <a href="#tbl-detections">Table&nbsp;1</a>) and extracted data for 25 unique date-coordinate pairs. On our machine this took 1.8 mins to run.</p>
+<div class="callout callout-style-simple callout-caution">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>In the code above we match the closest eReefs model grid cell to each point in our list of coordinates (i.e.&nbsp;for each tracking detection). This will therefore match grid cells to all the coordinates, even if they are not within the eReefs model boundary. This behaviour may be useful when we have points right along the coastline as the eReefs models have small gaps at many points along the coast (see image below). However, in other cases this behaviour may not be desirable. For example, if we had points down near Sydney they would be matched to the closest eReefs grid cells (somewhere up near Brisbane) and the extracted data would be erroneous.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="images/ereefs_model_boundary_and_grid_cells.jpeg"><img src="images/ereefs_model_boundary_and_grid_cells.jpeg" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Our extracted data is shown below in <a href="#tbl-extracted-data">Table&nbsp;2</a>. To get this data we openned 24 files on the server (corresponding to unique dates in <a href="#tbl-detections">Table&nbsp;1</a>) and extracted data for 25 unique date-coordinate pairs. On our machine this took 1.9 mins to run.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the extracted data</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>extracted_data <span class="sc">|&gt;</span> <span class="fu">kable</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>() <span class="sc">|&gt;</span> <span class="fu">scroll_box</span>(<span class="at">height =</span> <span class="st">"300px"</span>, <span class="at">fixed_thead =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

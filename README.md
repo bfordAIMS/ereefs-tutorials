@@ -33,7 +33,7 @@ To successfully render the website you will need the following:
 * The R packages and Python modules used within the scripts you are trying to render
 
   * R packages are installed from an R console with the command <br>`install.packages("<package_name>")` for packages hosted on CRAN; or <br>`remotes::install_github("<Github username>/<repo name>")` to install packages hosted in a Github repository.
-  * Python modules are installed from a python console with the command <br> `pip install <module name>`
+  * Python modules are installed from a python console with the command <br> `pip/conda/mamba install <module name>` (depending on the python package manager installed on your machine)
 
 #### Recommended:
 

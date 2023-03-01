@@ -22,7 +22,7 @@ In this tutorial we will look at how to get eReefs data from the [AIMS server](h
 ```{r RPackages}
 library(RNetCDF) # to access server data files via OPeNDAP
 library(readr) # to efficiently read in data
-library(janitor) # to create clean variable names
+library(janitor) # to create consistent, 'clean' variable names
 library(tidyverse) # for data manipulation and plotting with ggplot2
 library(lubridate) # for working with date and time variables 
 library(leaflet) # to create an interactive map of the tracking locations
@@ -69,7 +69,8 @@ loggerhead_data <- read_csv("data/Loggerhead_Sea_Turtle_satellite_tracking_detec
 
 # Remove land based records (as a result of coordinate uncertainty)
 land_based_records <- c(4022992331, 4022992326, 4022992312, 4022992315, 4022992322, 4022992306)
-loggerhead_data <- loggerhead_data |> dplyr::filter(!(record_id %in% land_based_records))
+loggerhead_data <- loggerhead_data |> 
+  dplyr::filter(!(record_id %in% land_based_records))
 
 # Select the variables relevant to this tutorial
 loggerhead_data <- loggerhead_data |> 
@@ -85,7 +86,7 @@ loggerhead_data |>
 
 ## Extracting data from the server
 
-In the preceeding tutorial [Accessing eReefs data from the AIMS server](../server-data-access-r/server_data_access_r.html) we introduced the process of extracting eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will now extend this methodology to extract data for a set of points and dates. 
+In the preceeding tutorial [Accessing eReefs data from the AIMS server](../basic-server-access/basic_server_access_r.qmd) we introduced the process of extracting eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will now extend this methodology to extract data for a set of points and dates. 
 
 In @tbl-detections below we see the set of coordinates and dates for which we wish to get the eReefs data. 
 
@@ -164,6 +165,14 @@ for (i in 1:length(dates)) {
     lat_index <- which.min(abs(server_lats_i - lat_j))
 
     # Setup start vector arguments for RNetCDF::var.get.nc (same for temp, salt, currents u & v)
+    ###################################
+    # Recall the order of the dimensions (longitude, latitude, k, time) from the previous tutorial. Therefore we want [lon_index, lat_index, k = 16 corresponding to a depth of 0.5m, time = 1 (as we're using the daily files this is the only option)]. If you are still confused go back to the previous tutorial or have a look at the structure of one of the server files by uncommenting the following 5 lines of code:
+    # not_yet_run = TRUE  # used so the following lines are only run once
+    # if (not_yet_run) { 
+    #   print.nc(server_file_i)
+    #   not_yet_run = FALSE
+    # }
+    ##################################
     start_j <- c(lon_index, lat_index, 16, 1) # k = 16 corresponds to depth = 0.5m
     count_j <- c(1, 1, 1, 1) # only extracting a single value for each variable
 
@@ -189,9 +198,15 @@ extract_time <- t_stop - t_start
 colnames(extracted_data) <- c("date", "lon", "lat", "temp", "salt", "u", "v")
 ```
 
+:::{.callout-caution appearance="simple"}
+In the code above we match the closest eReefs model grid cell to each point in our list of coordinates (i.e. for each tracking detection). This will therefore match grid cells to all the coordinates, even if they are not within the eReefs model boundary. This behaviour may be useful when we have points right along the coastline as the eReefs models have small gaps at many points along the coast (see image below). However, in other cases this behaviour may not be desirable. For example, if we had points down near Sydney they would be matched to the closest eReefs grid cells (somewhere up near Brisbane) and the extracted data would be erroneous.
+
+[![](images/ereefs_model_boundary_and_grid_cells.jpeg)](images/ereefs_model_boundary_and_grid_cells.jpeg)
+:::
+
 Our extracted data is shown below in @tbl-extracted-data. To get this data we openned `r length(dates)` files on the server (corresponding to unique dates in @tbl-detections) and extracted data for `r nrow(detections)` unique date-coordinate pairs. On our machine this took `r paste(round(as.numeric(extract_time), 1), units(extract_time))` to run.
 
-```{r printExtractedData}
+```{r extractedDataTable}
 #| tbl-cap: Extracted daily mean temperature, salinity, and east- and northward current velocities (u, v respectively) for Loggerhead Sea Turtle detections (Strydom, 2022)
 #| label: tbl-extracted-data
 
@@ -204,7 +219,7 @@ extracted_data |> kable() |> kable_styling() |> scroll_box(height = "300px", fix
 
 We will match up the eReefs data with our tracking detections by combining the two datasets based on common date, longitude and latitude values.
 
-```{r}
+```{r matchedDataTable}
 #| tbl-cap: Loggerhead Sea Turtle tracking detections (Strydom, 2022) and corresponding eReefs daily mean temperature, salinity, east- and northward current velocities (u, v respectively).
 #| label: tbl-combined-data
 

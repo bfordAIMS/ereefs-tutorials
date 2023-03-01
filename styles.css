@@ -144,3 +144,10 @@ div.callout-warning.callout-style-default>.callout-header {
   margin-top: auto;
   margin-bottom: auto;
 }
+.scroll_box_x {
+  overflow-x: scroll;
+}
+.scroll_box_y {
+  max-height: 300px;
+  overflow-y: auto;
+}

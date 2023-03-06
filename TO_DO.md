@@ -6,10 +6,8 @@
   - eatlas reef boundaries shapefile
   - etc.
 
-* Efficient server access (R & Python). The third tutorial in the server access series. Considers ways to maximise efficiency of accessing data from the server (e.g. for 50,000 points). Provide a time comparison of R vs python.
+* Efficient server access (R & Python). The third tutorial in the server access series. Considers ways to maximise efficiency of accessing data from the server (e.g. for 50,000 points). Provide a time comparison of R vs python. (Minimize the number of files opened, Check if points are in the eReefs model scope, Check if multiple points in single model grid cell).
 
 * Map plot tutorial (R & Python) in plotting series. Looks at plotting points and rasters on maps (static and interactive with leaflet).
 
 * Create python version of the processing tutorial. 
-
-* 

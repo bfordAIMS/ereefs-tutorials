@@ -147,7 +147,7 @@ We will now write a script which extracts the data for the dates and coordinates
 #| message: true
  
 # GET DATA FOR EACH DATE AND COORDINATE (LAT LON) PAIR
-t_start = datetime.now() # to track run time of extraction
+t_start = dt.datetime.now() # to track run time of extraction
 
 ## 1. Setup variables for data extraction
 # Server file name = <file_prefix><date (yyyy-mm-dd)><file_suffix>
@@ -162,6 +162,7 @@ dates = detections['date'].unique() # unique dates for which to open server file
 
 ## 2. For each date of interest, open a connection to the corresponding data file on the server
 for i in range(len(dates)):
+  date_i = dates[i]
   
   # Open file
   file_name_i = file_prefix + dates[i] + file_suffix
@@ -179,17 +180,17 @@ for i in range(len(dates)):
     
     # Current coordinate of interest
     lon_j = row_j.longitude
-    lat_j = row_j.latitutde
+    lat_j = row_j.latitude
         
     # Find the index of the grid cell containing our coordinate of interest (i.e. the center-point closest to our point of interest)
     lon_index_j = np.argmin(np.abs(server_lons_i - lon_j))
     lat_index_j = np.argmin(np.abs(server_lats_i - lat_j))
     # Note: This will return the closest grid cell, even for coordinates outside of the eReefs model boundary
 
-    # Setup the vector of dimension indices for which to extract data
-    dim_ind = [1, 16, lat_index_j, lon_index_j]
+    # Setup the dimension indices for which to extract data (needs to be a tuple; recall that python starts counting at 0 🤦)
+    dim_ind = tuple([0, 15, lat_index_j, lon_index_j])
     ######################################## 
-    # Recall the order of the dimensions (time, k, latitude, longitude) from the previous tutorial. Therefore we want [time = 1 (as we're using the daily files this is the only option), k = 16 corresponding to a depth of 0.5m, lat_index_j, lon_index_j]. If you are still confused, go back to the previous tutorial or have a look at the structure of one of the server files by uncommenting the following 5 lines of code:
+    # Recall the order of the dimensions (time, k, latitude, longitude) from the previous tutorial. Therefore we want [time = 1 (as we're using the daily files this is the only option), k = 15 corresponding to a depth of 0.5m, lat_index_j, lon_index_j]. If you are still confused, go back to the previous tutorial or have a look at the structure of one of the server files by uncommenting the following 5 lines of code:
     # not_yet_run = True  # used so the following lines are only run once
     # if not_yet_run: 
     #   print(server_file_i.dimensions)
@@ -198,34 +199,35 @@ for i in range(len(dates)):
     ########################################
 
     # Get the data for the grid cell containing our point of interest
-    temp_j = server_file_i.variables['temp'][0, 15, lat_index_j, lon_index_j]
-    salt_j = server_file_i.variables['salt']dim_ind
-    u_j = server_file_i.variables['u']dim_ind
-    v_j = server_file_i.variables['v']dim_ind
+    temp_j = server_file_i.variables['temp'][dim_ind]
+    salt_j = server_file_i.variables['salt'][dim_ind]
+    u_j = server_file_i.variables['u'][dim_ind]
+    v_j = server_file_i.variables['v'][dim_ind]
 
     extracted_data_j = pd.DataFrame({
-      'date_i': date_i,
-      'lon_j': lon_j,
-      'lat_j': lat_j,
-      'temp_j': temp_j,
-      'salt_j': salt_j,
-      'u_j': u_j,
-      'v_j': v_j
+      'date': [date_i],
+      'lon': [lon_j],
+      'lat': [lat_j],
+      'temp': [temp_j],
+      'salt': [salt_j],
+      'u': [u_j],
+      'v': [v_j]
     })
 
     ## 4. Save data in memory and repeat for next date-coordinate pair
-    extracted_data <- rbind(extracted_data, extracted_data_j)
-  }
+    extracted_data = pd.concat([extracted_data, extracted_data_j], ignore_index = True)
+  
+
   # Close connection to open server file and move to the next date
   server_file_i.close()
-}
+
 
 # Calculate the run time of the extraction
-t_stop <- Sys.time()
-extract_time <- t_stop - t_start
-
-# Rename the extracted data columns
-colnames(extracted_data) <- c("date", "lon", "lat", "temp", "salt", "u", "v")
+t_stop = dt.datetime.now()
+extract_time = t_stop - t_start
+extract_mins = int(extract_time.total_seconds()/60)
+extract_secs = int(extract_time.total_seconds() % 60)
+print("Data extracted for", len(detections), "points from", len(dates), "files. Extraction time:", extract_mins, "min", extract_secs, "sec.")
 ```
 
 :::{.callout-caution appearance="simple"}
@@ -233,13 +235,6 @@ In the code above we match the closest eReefs model grid cell to each point in o
 
 [![](images/ereefs_model_boundary_and_grid_cells.jpeg)](images/ereefs_model_boundary_and_grid_cells.jpeg)
 :::
-
-```{r eval=FALSE}
-# Minimize the number of files opened 
-# Check if points are in the eReefs model scope
-# Check if multiple points in signle model grid cell
-# 
-```
 
 
 ```{r eval=FALSE}

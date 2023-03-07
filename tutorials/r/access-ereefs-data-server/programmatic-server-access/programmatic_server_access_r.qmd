@@ -35,7 +35,9 @@ The tracking of marine animals is commonly used by researchers to gain insights 
 
 In this tutorial we will pretend that we have tracking data for Loggerhead Sea Turtles and wish to get eReefs data corresponding to the tracked points (in time and space) to understand more about the likely environmental conditions experienced by our turtles. 
 
-<details><summary>Read more: Tracking marine animals</summary>
+:::{.callout-note collapse="true" icon="false"}
+
+# Read more: Tracking marine animals
 
 Marine animals are typically tracked using either acoustic or satellite tags. These tags are attached to the animals and transmit signals back to recievers, logging the animal's location at different points in time. In some cases other data such as depth, temperature, and animal movement profiles are recorded and the data transmitted to the recievers whenever possible. 
 
@@ -43,7 +45,7 @@ Acoustic tracking requires a network of recievers to be placed in the ocean in o
 
 Satellite tracking, on the other hand, is able to track animals over virtually the entire ocean as the tags transmit signals to a network of satellites orbiting the earth. However, unlike acoustic tags, the signals cannot be transmitted through water and the tagged animals must breach the ocean surface in order to have their location logged and any other recorded data be received. The accuracy of the logged location depends on the quality of the transmitted signal. For high-quality signals, the location uncertainty can be in the hundreds of metres, however for bad quality signals this can blow out to over 10 km.
 
-</details>
+:::
 
 ## Example tracking data
 
@@ -86,13 +88,10 @@ loggerhead_data |>
 
 ## Extracting data from the server
 
-In the preceeding tutorial [Accessing eReefs data from the AIMS server](../basic-server-access/basic_server_access_r.qmd) we introduced the process of extracting eReefs data from the [AIMS server](http://thredds.ereefs.aims.gov.au/thredds/catalog.html). We will now extend this methodology to extract data for a set of points and dates. 
+We will extend the basic methods introduced in  the preceeding tutorial [Accessing eReefs data from the AIMS server](../basic-server-access/basic_server_access_r.qmd) to extract data for a set of points and dates. 
 
-In @tbl-detections below we see the set of coordinates and dates for which we wish to get the eReefs data. 
+We will extract the eReefs daily mean temperature (`temp`), salinity (`salt`), and east- and northward current velocities (`u` and `v`) corresponding to the coordinates and dates for the tracking detections shown in @tbl-detections.
 
-:::{.callout-note appearance="simple"}
-The AIMS eReefs server only contains aggregated data. That is daily, monthly, or yearly aggregations of the hourly eReefs raw model output. We will use the daily aggregated data for this tutorial, however the same techniques could be applied to access the raw model data from the [National Computational Infrastructure (NCI) server](https://dapds00.nci.org.au/thredds/catalogs/fx3/catalog.html).
-:::
 
 ```{r detectionsTable}
 #| tbl-cap: Loggerhead Sea Turtle detections (Strydom, 2022)

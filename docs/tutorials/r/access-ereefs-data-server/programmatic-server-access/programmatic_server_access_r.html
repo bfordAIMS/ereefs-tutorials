@@ -254,14 +254,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="motivating-problem">Motivating problem</h2>
 <p>The tracking of marine animals is commonly used by researchers to gain insights into the distribution, biology, behaviour and ecology of different species. However, knowing where an animal was at a certain point in time is only one piece of the puzzle. To start to understand <em>why</em> an animal was where it was, we usually require information on things like: What type of habitat is present at the location? What were the environmental conditions like at the time? What other lifeforms were present at the tracked location (e.g.&nbsp;for food or mating)?</p>
 <p>In this tutorial we will pretend that we have tracking data for Loggerhead Sea Turtles and wish to get eReefs data corresponding to the tracked points (in time and space) to understand more about the likely environmental conditions experienced by our turtles.</p>
-<details>
-<summary>
+<div class="callout callout-style-default callout-note no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
 Read more: Tracking marine animals
-</summary>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
 <p>Marine animals are typically tracked using either acoustic or satellite tags. These tags are attached to the animals and transmit signals back to recievers, logging the animal’s location at different points in time. In some cases other data such as depth, temperature, and animal movement profiles are recorded and the data transmitted to the recievers whenever possible.</p>
 <p>Acoustic tracking requires a network of recievers to be placed in the ocean in order to pick up the tags’ transmitted signals when they come within range (typically around 500 m). Acoustic tracking has the advantage of being able transmit and recieve signals underwater, however is limited by the coverage of the reciever network. In some instances, researchers do without the reciever network and follow the animals around in a boat to receive the data. The suitability of acoustic tracking depends on the study species and research question.</p>
 <p>Satellite tracking, on the other hand, is able to track animals over virtually the entire ocean as the tags transmit signals to a network of satellites orbiting the earth. However, unlike acoustic tags, the signals cannot be transmitted through water and the tagged animals must breach the ocean surface in order to have their location logged and any other recorded data be received. The accuracy of the logged location depends on the quality of the transmitted signal. For high-quality signals, the location uncertainty can be in the hundreds of metres, however for bad quality signals this can blow out to over 10 km.</p>
-</details>
+</div>
+</div>
+</div>
 </section>
 <section id="example-tracking-data" class="level2">
 <h2 class="anchored" data-anchor-id="example-tracking-data">Example tracking data</h2>
@@ -303,8 +313,8 @@ Read more: Tracking marine animals
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMarkers</span>(<span class="at">label =</span> <span class="sc">~</span>date_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div id="fig-data-map" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-015ff245516d0e9f9be2" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-015ff245516d0e9f9be2">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-20.5,-25.5,-24.5,-18.5,-14.5,-26.5,-19.5,-10.5,-20.5,-22.5,-21.5,-11.5,-19.5,-18.5,-24.5,-15.5,-16.5,-13.5,-21.5,-12.5,-9.5,-23.5,-16.5,-23.5,-17.5],[150.5,153.5,152.5,147.5,145.5,153.5,148.5,143.5,149.5,151.5,150.5,143.5,149.5,146.5,153.5,145.5,145.5,144.5,151.5,143.5,143.5,152.5,146.5,151.5,146.5],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["2022-01-17 17:06:32","2022-01-02 21:49:55","2021-12-21 17:57:22","2022-01-27 17:00:04","2022-02-12 10:34:12","2022-02-12 08:59:01","2022-01-23 07:02:18","2022-04-14 06:31:48","2022-01-19 17:44:38","2022-01-09 20:25:01","2022-01-14 18:26:17","2022-04-09 22:00:54","2022-01-21 07:22:08","2022-01-30 17:02:42","2022-02-03 21:37:56","2022-02-09 18:33:03","2022-02-07 07:15:30","2022-03-25 07:10:49","2022-01-13 06:28:09","2022-04-01 18:41:42","2022-04-21 10:30:09","2022-01-05 07:33:53","2022-02-06 18:25:38","2022-01-06 05:03:23","2022-02-02 09:14:56"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-26.5,-9.5],"lng":[143.5,153.5]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-c151fcf90e48daf9065d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-c151fcf90e48daf9065d">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[-20.5,-25.5,-24.5,-18.5,-14.5,-26.5,-19.5,-10.5,-20.5,-22.5,-21.5,-11.5,-19.5,-18.5,-24.5,-15.5,-16.5,-13.5,-21.5,-12.5,-9.5,-23.5,-16.5,-23.5,-17.5],[150.5,153.5,152.5,147.5,145.5,153.5,148.5,143.5,149.5,151.5,150.5,143.5,149.5,146.5,153.5,145.5,145.5,144.5,151.5,143.5,143.5,152.5,146.5,151.5,146.5],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,["2022-01-17 17:06:32","2022-01-02 21:49:55","2021-12-21 17:57:22","2022-01-27 17:00:04","2022-02-12 10:34:12","2022-02-12 08:59:01","2022-01-23 07:02:18","2022-04-14 06:31:48","2022-01-19 17:44:38","2022-01-09 20:25:01","2022-01-14 18:26:17","2022-04-09 22:00:54","2022-01-21 07:22:08","2022-01-30 17:02:42","2022-02-03 21:37:56","2022-02-09 18:33:03","2022-02-07 07:15:30","2022-03-25 07:10:49","2022-01-13 06:28:09","2022-04-01 18:41:42","2022-04-21 10:30:09","2022-01-05 07:33:53","2022-02-06 18:25:38","2022-01-06 05:03:23","2022-02-02 09:14:56"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-26.5,-9.5],"lng":[143.5,153.5]}},"evals":[],"jsHooks":[]}</script>
 <p></p><figcaption class="figure-caption">Figure&nbsp;1: Loggerhead Sea Turtle satellite tracking records (December 2021 - April 2022)</figcaption><p></p>
 </figure>
 </div>
@@ -312,18 +322,8 @@ Read more: Tracking marine animals
 </section>
 <section id="extracting-data-from-the-server" class="level2">
 <h2 class="anchored" data-anchor-id="extracting-data-from-the-server">Extracting data from the server</h2>
-<p>In the preceeding tutorial <a href="../../../../tutorials/r/access-ereefs-data-server/basic-server-access/basic_server_access_r.html">Accessing eReefs data from the AIMS server</a> we introduced the process of extracting eReefs data from the <a href="http://thredds.ereefs.aims.gov.au/thredds/catalog.html">AIMS server</a>. We will now extend this methodology to extract data for a set of points and dates.</p>
-<p>In <a href="#tbl-detections">Table&nbsp;1</a> below we see the set of coordinates and dates for which we wish to get the eReefs data.</p>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>The AIMS eReefs server only contains aggregated data. That is daily, monthly, or yearly aggregations of the hourly eReefs raw model output. We will use the daily aggregated data for this tutorial, however the same techniques could be applied to access the raw model data from the <a href="https://dapds00.nci.org.au/thredds/catalogs/fx3/catalog.html">National Computational Infrastructure (NCI) server</a>.</p>
-</div>
-</div>
-</div>
+<p>We will extend the basic methods introduced in the preceeding tutorial <a href="../../../../tutorials/r/access-ereefs-data-server/basic-server-access/basic_server_access_r.html">Accessing eReefs data from the AIMS server</a> to extract data for a set of points and dates.</p>
+<p>We will extract the eReefs daily mean temperature (<code>temp</code>), salinity (<code>salt</code>), and east- and northward current velocities (<code>u</code> and <code>v</code>) corresponding to the coordinates and dates for the tracking detections shown in <a href="#tbl-detections">Table&nbsp;1</a>.</p>
 <div class="cell">
 <details>
 <summary>Show code to produce table</summary>
@@ -602,7 +602,7 @@ Read more: Tracking marine animals
 </div>
 </div>
 </div>
-<p>Our extracted data is shown below in <a href="#tbl-extracted-data">Table&nbsp;2</a>. To get this data we openned 24 files on the server (corresponding to unique dates in <a href="#tbl-detections">Table&nbsp;1</a>) and extracted data for 25 unique date-coordinate pairs. On our machine this took 1.9 mins to run.</p>
+<p>Our extracted data is shown below in <a href="#tbl-extracted-data">Table&nbsp;2</a>. To get this data we openned 24 files on the server (corresponding to unique dates in <a href="#tbl-detections">Table&nbsp;1</a>) and extracted data for 25 unique date-coordinate pairs. On our machine this took 1.8 mins to run.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the extracted data</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>extracted_data <span class="sc">|&gt;</span> <span class="fu">kable</span>() <span class="sc">|&gt;</span> <span class="fu">kable_styling</span>() <span class="sc">|&gt;</span> <span class="fu">scroll_box</span>(<span class="at">height =</span> <span class="st">"300px"</span>, <span class="at">fixed_thead =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

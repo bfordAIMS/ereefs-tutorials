@@ -4,7 +4,7 @@ subtitle: "The effect of wind on surface current"
 ---
 
 :::{.tutorial-description}
-Learn how to use eReefs data to answer the question '**How strong does the wind need to be to set the direction of the surface ocean currents?**' in {{< fa brands python >}} python.
+Learn how to use eReefs data to answer the question '**How strong does the wind need to be to set the direction of the surface ocean currents?**' in {{< fa brands r-project >}}.
 :::
 
 ```{r echo=FALSE}

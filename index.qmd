@@ -51,7 +51,7 @@ Extends the methods introduced in the basic access tutorial to programmatically 
 :::
 :::{.hp-text}
 [Time series plots]{.hp-title} <br>
-Blurb here.
+Learn how to create time series plots of eReefs data. [*Note: the python tutorial has not yet been updated to cover the more advanced topics included in the R tutorial*]
 :::
 :::{.hp-links}
 [{{< fa brands r-project >}} R](tutorials/r/plot-ereefs-data/time-series-plot/time_series_plot_r.qmd) <br>
@@ -70,7 +70,7 @@ Blurb here.
 :::
 :::{.hp-text}
 [Correlation: wind and current]{.hp-title} <br>
-Blurb here.
+Learn how to extract and process eReefs data to answer the question: *How strong does the wind need to be to set the direction of the surface ocean currents?*
 :::
 :::{.hp-links}
 [{{< fa brands r-project >}} R](tutorials/r/process-ereefs-data/correlation/correlation_wind_and_current_r.qmd) <br>

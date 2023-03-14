@@ -121,5 +121,20 @@
   },
   "TO_DO.md": {
     "TO_DO.html": "cc4bbb05"
+  },
+  "tutorials/python/use-ereefs-data/correlation/correlation_wind_and_current_python.qmd": {
+    "correlation_wind_and_current_python.html": "49c35509"
+  },
+  "tutorials/r/use-ereefs-data/correlation/processing_data_r.qmd": {
+    "processing_data_r.html": "81d8eafb"
+  },
+  "indexTILES.qmd": {
+    "indexTILES.html": "716c34c8"
+  },
+  "tutorials/python/process-ereefs-data/correlation/correlation_wind_and_current_python.qmd": {
+    "correlation_wind_and_current_python.html": "c0dbe8ee"
+  },
+  "tutorials/r/process-ereefs-data/correlation/correlation_wind_and_current_r.qmd": {
+    "correlation_wind_and_current_r.html": "b3b2ab3e"
   }
 }

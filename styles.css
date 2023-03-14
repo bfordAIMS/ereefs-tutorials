@@ -24,6 +24,36 @@
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   font-style: italic;
 }
+/* Classes for homepage (hp) layout */
+.hp-tutorial {
+  display: flex;
+  margin: 0%
+}
+.hp-thumbnail { /* width 17% */
+  flex: 13%;
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.hp-text { /* width 63% */
+  flex: 64%;
+  padding-right: 1%;
+  line-height: 1.4em;
+}
+.hp-title {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+.hp-links {  /* width 20% */
+  flex: 13%;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 5%;
+  margin-right: 2%;
+  line-height: 2em;
+}
+
 h1 {
   margin-top: 0px;
   font-size: 2em;

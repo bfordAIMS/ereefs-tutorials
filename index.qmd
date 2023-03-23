@@ -51,7 +51,7 @@ Extends the methods introduced in the basic access tutorial to programmatically 
 :::
 :::{.hp-text}
 [Time series plots]{.hp-title} <br>
-Learn how to create time series plots of eReefs data. [*Note: the python tutorial has not yet been updated to cover the more advanced topics included in the R tutorial*]
+Learn how to create time series plots of eReefs data. <br>[*Note: the python tutorial has not yet been updated to cover the more advanced topics included in the R tutorial*]
 :::
 :::{.hp-links}
 [{{< fa brands r-project >}} R](tutorials/r/plot-ereefs-data/time-series-plot/time_series_plot_r.qmd) <br>

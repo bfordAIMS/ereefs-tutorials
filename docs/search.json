@@ -28,13 +28,6 @@
     "text": "Process eReefs data\n\n\n\n\n\n\nCorrelation: wind and current  Learn how to extract and process eReefs data to answer the question: How strong does the wind need to be to set the direction of the surface ocean currents?\n\n\n R   Python"
   },
   {
-    "objectID": "indexTILES.html",
-    "href": "indexTILES.html",
-    "title": "eReefs tutorials",
-    "section": "",
-    "text": "Access eReefs data from the AIMS server\n\n\n\nBasic access with OPeNDAP   R    Python\nProgrammatic access for multiple dates and points   R    Python\n\n\n\n\n\n\n\n\n\n\n\nPlot eReefs data\n\n\n\nTime series plots   R    Python\n\n\n\n\n\n\n\n\n\n\n\nUse eReefs data\n\n\n\nCorrelation - wind and current   R    Python"
-  },
-  {
     "objectID": "TO_DO.html",
     "href": "TO_DO.html",
     "title": "List of ideas to possible implement",

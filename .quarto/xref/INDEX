@@ -136,5 +136,20 @@
   },
   "tutorials/r/process-ereefs-data/correlation/correlation_wind_and_current_r.qmd": {
     "correlation_wind_and_current_r.html": "b3b2ab3e"
+  },
+  "tutorials/intro_to_ereefs.qmd": {
+    "intro_to_ereefs.html": "6b9df99b"
+  },
+  "tutorials/intro_to_ereefs_future_ideas.qmd": {
+    "intro_to_ereefs_future_ideas.html": "23fd5f65"
+  },
+  "tutorials/general/intro_to_ereefs.qmd": {
+    "intro_to_ereefs.html": "2cf1f29a"
+  },
+  "tutorials/general/biogeochemical_model.qmd": {
+    "biogeochemical_model.html": "221f178f"
+  },
+  "tutorials/general/hydrodynamic_model.qmd": {
+    "hydrodynamic_model.html": "d4d976b1"
   }
 }

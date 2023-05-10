@@ -53,6 +53,10 @@
   margin-right: 2%;
   line-height: 2em;
 }
+/* Rounded corners */
+.round {
+  border-radius: 25%;
+}
 
 h1 {
   margin-top: 0px;
@@ -60,11 +64,12 @@ h1 {
   text-align: left;
 }
 h2 {
-  margin-top: 30px;
+  margin-top: 60px;
   font-size: 1.75em;
   text-align: left;
 }
 h3 {
+  margin-top: 30px;
   font-size: 1.5em;
   text-align: left;
 }
